@@ -1,7 +1,11 @@
+import { SongsService } from './songs.service';
+import { FeatherService } from './feather.service';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import * as io from 'socket.io-client';
+import * as feathers from 'feathers-client';
 
 import { AppComponent } from './app.component';
 import { SongsComponent } from './songs/songs.component';
@@ -27,14 +31,14 @@ const ROUTES = [
   declarations: [
     AppComponent,
     SongsComponent,
-    WorshipComponent
+    WorshipComponent,
   ],
   imports: [
     BrowserModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [],
+  providers: [ FeatherService, SongsService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

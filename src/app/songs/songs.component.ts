@@ -29,13 +29,14 @@ export class SongsComponent implements OnInit, OnDestroy {
   songs: Song[] = [];
   items: Song[] = [];
   itemCount = 0;
-  itemLimit = 12;
+  itemLimit = Math.floor((window.parent.innerHeight - 200) / 55);
   subscription: Subscription;
   searchString: string = '';
   dataTableResource : DataTableResource<Song>;
   dataColumns : DataColumn[] = [
-    new DataColumn('title_1', 'Title'),
-    new DataColumn('numwords', '# Words')
+    new DataColumn('title', 'Title'),
+    new DataColumn('numwords', '# Words'),
+    new DataColumn('last_modified', 'Last Modified'),
   ];
 
   @ViewChild(DataTable) dataTable;

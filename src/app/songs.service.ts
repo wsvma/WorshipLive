@@ -1,7 +1,7 @@
 import { Observable, Observer } from 'rxjs/Rx';
 import { FeatherService } from './feather.service';
 import { Injectable } from '@angular/core';
-import { Song } from '../models/song'
+import { Song, SongInDb } from '../models/song'
 
 @Injectable()
 export class SongsService {
@@ -26,16 +26,20 @@ export class SongsService {
   }
 
   public find(query) {
-    this.service.find(query, (err, songs: Song[]) => {
+    this.service.find(query, (err, songs: SongInDb[]) => {
       if (err) return console.error(err);
 
-      this.dataStore.songs = songs;
+      this.dataStore.songs = [];
+      for (let s of songs) {
+        let newSong: Song = new Song(s);
+        this.dataStore.songs.push(newSong);
+      }
       this.songObserver.next(this.dataStore.songs);
     });
   }
 
   public update(song: Song) {
-    this.service.update(song._id, song);
+    this.service.update(song._id, song.songInDbFormat);
   }
 
   public remove(songs: Song[]) {
@@ -64,7 +68,6 @@ export class SongsService {
 
   private onRemoved(song: Song) {
     const index = this.getIndex(song._id);
-    console.log('song', index, 'removed');
     this.dataStore.songs.splice(index, 1);
     this.songObserver.next(this.dataStore.songs);
   }

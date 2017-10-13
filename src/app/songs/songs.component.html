@@ -5,19 +5,20 @@
         <h5 class="filter-header">Filter songs by:</h5>
         <div class="form-group w-100">
           <label class="sr-only" for="search">Title/Lyrics</label>
-          <input name="search" type="text" [(ngModel)]="searchString" class="form-control w-100" id="search" placeholder="Search by title/lyrics" (keyup)="filterSongs()">
+          <input name="search" type="text" [(ngModel)]="searchString" class="form-control w-100" id="search" placeholder="Title or Lyrics" (keyup)="filterSongs()">
         </div>
       </form>
     </div>
     <div class="col-10">
       <button type="button" class="btn btn-default">Add New</button>
-      <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0">Add to Worship...</button>
+      <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0"                        >Add to Worship...</button>
       <button type="button" class="btn btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeSongs()">Remove</button>
       <button type="button" class="btn btn-default" [hidden]="numRowsSelected()!=1" (click)="routeToEdit()">Modify</button>
       <data-table
         [items]="items"
         [itemCount]="itemCount"
         [limit]="itemLimit"
+        [sortBy]="'numwords'"
         (reload)="reload($event)"
         (rowDoubleClick)="songDoubleClicked($event)"
         [selectOnRowClick]="true"

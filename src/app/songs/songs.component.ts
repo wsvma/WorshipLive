@@ -1,3 +1,5 @@
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { Router } from '@angular/router';
 import { SongsService } from '../songs.service';
 import { Subscription } from 'rxjs/Rx';
@@ -38,7 +40,10 @@ export class SongsComponent implements OnInit, OnDestroy {
 
   @ViewChild(DataTable) dataTable;
 
-  constructor(private songService: SongsService, private router: Router) { }
+  constructor(
+    private songService: SongsService,
+    private router: Router,
+    private dialogService: DialogService) { }
 
   numRowsSelected() {
     if (!this.dataTable) return 0;
@@ -86,9 +91,15 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   removeSongs() {
-    let songs = this.dataTable.selectedRows.map(x => x.item);
-    this.dataTable.selectedRows = [];
-    this.songService.remove(songs);
+    this.dialogService.addDialog(ConfirmDialogComponent, {
+      title: 'Confirm removal',
+      message: this.numRowsSelected() + ' song(s) will be removed and it cannot be undone. Proceed?'})
+      .subscribe(confirmed => {
+        if (!confirmed) return;
+        let songs = this.dataTable.selectedRows.map(x => x.item);
+        this.dataTable.selectedRows = [];
+        this.songService.remove(songs);
+      });
   }
 
   private countWords(str) {

@@ -1,3 +1,4 @@
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { CustomReuseStrategy } from './custom.reusestrategy';
 import { SongsService } from './songs.service';
 import { FeatherService } from './feather.service';
@@ -14,6 +15,7 @@ import { AppComponent } from './app.component';
 import { SongsComponent } from './songs/songs.component';
 import { WorshipComponent } from './worship/worship.component';
 import { SongEditComponent } from './song-edit/song-edit.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 const ROUTES = [
   {
@@ -41,11 +43,13 @@ const ROUTES = [
     SongsComponent,
     WorshipComponent,
     SongEditComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     DataTableModule,
+    BootstrapModalModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(ROUTES)
   ],
@@ -55,6 +59,9 @@ const ROUTES = [
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  entryComponents: [
+    ConfirmDialogComponent
+  ]
 })
 export class AppModule { }

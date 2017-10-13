@@ -1,12 +1,21 @@
 import { Router } from '@angular/router';
 import { SongsService } from '../songs.service';
 import { Subscription } from 'rxjs/Rx';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Song } from '../../models/song';
 import { DataTableResource, DataTable } from 'angular-4-data-table';
 
 import * as wordcount from 'wordcount';
 import * as hasChinese from 'has-chinese';
+import * as fuzzy from 'fuzzy';
+
+class DataColumn {
+  constructor(
+    public property: string,
+    public header: string,
+    public sortable: boolean = true,
+    public resizable: boolean = true) {}
+}
 
 @Component({
   selector: 'app-songs',
@@ -22,6 +31,10 @@ export class SongsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   searchString: string = '';
   dataTableResource : DataTableResource<Song>;
+  dataColumns : DataColumn[] = [
+    new DataColumn('title_1', 'Title'),
+    new DataColumn('numwords', '# Words')
+  ];
 
   @ViewChild(DataTable) dataTable;
 
@@ -47,7 +60,6 @@ export class SongsComponent implements OnInit, OnDestroy {
   reload(params) {
     if (!this.dataTableResource) return;
 
-    console.log(params);
     this.dataTableResource.query(params)
       .then(items => {
         this.items = items;
@@ -63,7 +75,7 @@ export class SongsComponent implements OnInit, OnDestroy {
 
   filterSongs() {
     let filteredSongs = (this.searchString) ? this.songs.filter(s => {
-      return this.containsSearchString([s.title_1, s.lyrics]);
+      return fuzzy.filter(this.searchString, [s.title_1, s.lyrics]).length > 0;
     }) : this.songs;
     this.initializeDataTable(filteredSongs);
   }
@@ -72,16 +84,11 @@ export class SongsComponent implements OnInit, OnDestroy {
     let song = this.dataTable.selectedRows[0].item;
     this.router.navigateByUrl('/songs/' + song._id);
   }
-   
-  private containsSearchString(strings: string[]) {
 
-    for (var i = 0; i < strings.length; i++) {
-      if (!strings[i]) continue;
-      if (strings[i].toLowerCase().includes(this.searchString.toLowerCase()))
-        return true;
-    }
-
-    return false;
+  removeSongs() {
+    let songs = this.dataTable.selectedRows.map(x => x.item);
+    this.dataTable.selectedRows = [];
+    this.songService.remove(songs);
   }
 
   private countWords(str) {

@@ -5,7 +5,7 @@ import { RouteReuseStrategy, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataTableModule } from 'angular-4-data-table';
 import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import * as io from 'socket.io-client';
 import * as feathers from 'feathers-client';
@@ -54,6 +54,7 @@ const ROUTES = [
     SongsService,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule { }

@@ -34,6 +34,15 @@ export class SongsService {
     });
   }
 
+  public update(song: Song) {
+    this.service.update(song._id, song);
+  }
+
+  public remove(songs: Song[]) {
+    for (let song of songs)
+      this.service.remove(song._id);
+  }
+
   private getIndex(id: string): number {
     for (let i = 0; i < this.dataStore.songs.length; i++) {
       if (this.dataStore.songs[i]._id === id) {
@@ -43,23 +52,19 @@ export class SongsService {
     return -1;
   }
 
-  public update(song: Song) {
-    this.service.update(song._id, song);
-  }
-
   private onCreated(song: Song) {
     this.dataStore.songs.push(song);
   }
 
   private onUpdated(song: Song) {
     const index = this.getIndex(song._id);
-    console.log('song', index, 'updated');
     this.dataStore.songs[index] = song;
     this.songObserver.next(this.dataStore.songs);
   }
 
   private onRemoved(song: Song) {
     const index = this.getIndex(song._id);
+    console.log('song', index, 'removed');
     this.dataStore.songs.splice(index, 1);
     this.songObserver.next(this.dataStore.songs);
   }

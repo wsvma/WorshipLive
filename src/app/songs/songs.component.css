@@ -5,3 +5,7 @@
 :host /deep/ .data-table .data-table-row.selected {
     background-color: #E4EDF9;
 }
+
+.filter-header {
+    padding-top: 10px;
+}

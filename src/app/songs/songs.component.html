@@ -2,46 +2,32 @@
   <div class="row" *ngIf="songs.length > 0">
     <div class="col-2">
       <form class="form-inline w-100">
-        <h4>Filters</h4>
+        <h5 class="filter-header">Filter songs by:</h5>
         <div class="form-group w-100">
-          <label for="search">Title/Lyrics</label>
+          <label class="sr-only" for="search">Title/Lyrics</label>
           <input name="search" type="text" [(ngModel)]="searchString" class="form-control w-100" id="search" placeholder="Search by title/lyrics" (keyup)="filterSongs()">
         </div>
       </form>
     </div>
     <div class="col-10">
       <button type="button" class="btn btn-default">Add New</button>
-      <button type="button" class="btn btn-default" [ngClass]="{disabled: numRowsSelected()!=1}" (click)="routeToEdit()">Modify</button>
-      <button type="button" class="btn btn-default" [ngClass]="{disabled: numRowsSelected()==0}" (click)="removeSongs()">Remove</button>
-      <button type="button" class="btn btn-default" [ngClass]="{disabled: numRowsSelected()==0}">Add to Worship...</button>
+      <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0">Add to Worship...</button>
+      <button type="button" class="btn btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeSongs()">Remove</button>
+      <button type="button" class="btn btn-default" [hidden]="numRowsSelected()!=1" (click)="routeToEdit()">Modify</button>
       <data-table
         [items]="items"
         [itemCount]="itemCount"
         [limit]="itemLimit"
         (reload)="reload($event)"
         (rowDoubleClick)="songDoubleClicked($event)"
-
         [selectOnRowClick]="true"
         [multiSelect]="true"
-        [substituteRows]="false"
         [selectColumn]="true">
-        <data-table-column
-          [property]="'title_1'"
-          [header]="'Title'"
-          [resizable]="true"
-          [sortable]="true">
-        </data-table-column>
-        <data-table-column
-          [property]="'user_ref'"
-          [header]="'User Ref'"
-          [resizable]="true"
-          [sortable]="true">
-        </data-table-column>
-        <data-table-column
-          [property]="'numwords'"
-          [header]="'# Words'"
-          [resizable]="true"
-          [sortable]="true">
+        <data-table-column *ngFor="let col of dataColumns"
+          [property]="col.property"
+          [header]="col.header"
+          [resizable]="col.resizable"
+          [sortable]="col.sortable">
         </data-table-column>
       </data-table>
     </div>

@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
 
+html {
+    overflow-x: hidden;
+}
 .container-fluid {
     padding: 0;
 }

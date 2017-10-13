@@ -25,8 +25,8 @@ export class SongsService {
     this.dataStore = { songs: [] };
   }
 
-  public find() {
-    this.service.find((err, songs: Song[]) => {
+  public find(query) {
+    this.service.find(query, (err, songs: Song[]) => {
       if (err) return console.error(err);
 
       this.dataStore.songs = songs;
@@ -43,12 +43,17 @@ export class SongsService {
     return -1;
   }
 
+  public update(song: Song) {
+    this.service.update(song._id, song);
+  }
+
   private onCreated(song: Song) {
     this.dataStore.songs.push(song);
   }
 
   private onUpdated(song: Song) {
     const index = this.getIndex(song._id);
+    console.log('song', index, 'updated');
     this.dataStore.songs[index] = song;
     this.songObserver.next(this.dataStore.songs);
   }

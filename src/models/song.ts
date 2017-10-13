@@ -1,5 +1,6 @@
 
 export interface Song {
+    song_id: string;
     title_1: string;
     title_2: string;
     writer: string;
@@ -9,6 +10,8 @@ export interface Song {
     key: string;
     category: string;
     wordcount: string;
+    language: string[];
+    numwords: number;
     capo: string;
     timing: string;
     license_admin1: string;

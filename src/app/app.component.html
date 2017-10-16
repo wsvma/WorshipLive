@@ -1,11 +1,13 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link" routerLink="songs" [ngClass]="{active: tabSelected === 'songs'}" (click)="tabSelected = 'songs'">Songs</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" routerLink="worship" [ngClass]="{active: tabSelected === 'worship'}" (click)="tabSelected = 'worship'">Worship</a>
-  </li>
-</ul>
-<div class="container-fluid">
-  <router-outlet></router-outlet>
+<div class="d-flex flex-column h-100">
+  <ul class="nav nav-tabs" style="flex: 0 0 auto">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="songs" [ngClass]="{active: tabSelected === 'songs'}" (click)="tabSelected = 'songs'">Songs</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="worship" [ngClass]="{active: tabSelected === 'worship'}" (click)="tabSelected = 'worship'">Worship</a>
+    </li>
+  </ul>
+  <div class="flex-1 router-outlet-container">
+    <router-outlet></router-outlet>
+  </div>
 </div>

@@ -7,7 +7,11 @@ import { Song, SongInDb } from '../models/song'
 export class SongsService {
 
   public songs$: Observable<Song[]>;
-  private songObserver: Observer<Song[]>;
+  private songsObserver: Observer<Song[]>;
+
+  public song$: Observable<Song>;
+  private songObserver: Observer<Song>;
+
   private service: any;
   private dataStore: {
     songs: Song[];
@@ -20,7 +24,8 @@ export class SongsService {
     this.service.on('updated', (song) => this.onUpdated(song));
     this.service.on('removed', (song) => this.onRemoved(song));
 
-    this.songs$ = new Observable(observer => this.songObserver = observer);
+    this.songs$ = new Observable(observer => this.songsObserver = observer);
+    this.song$  = new Observable(observer => this.songObserver = observer);
 
     this.dataStore = { songs: [] };
   }
@@ -34,7 +39,15 @@ export class SongsService {
         let newSong: Song = new Song(s);
         this.dataStore.songs.push(newSong);
       }
-      this.songObserver.next(this.dataStore.songs);
+      this.songsObserver.next(this.dataStore.songs);
+    });
+  }
+
+  public get(id: string) {
+    this.service.get(id, (err, song: SongInDb) => {
+      if (err) return console.error(err);
+
+      this.songObserver.next(new Song(song));
     });
   }
 
@@ -56,19 +69,21 @@ export class SongsService {
     return -1;
   }
 
-  private onCreated(song: Song) {
-    this.dataStore.songs.push(song);
+  private onCreated(song: SongInDb) {
+    this.dataStore.songs.push(new Song(song));
+    this.songsObserver.next(this.dataStore.songs);
   }
 
-  private onUpdated(song: Song) {
+  private onUpdated(song: SongInDb) {
     const index = this.getIndex(song._id);
-    this.dataStore.songs[index] = song;
-    this.songObserver.next(this.dataStore.songs);
+    this.dataStore.songs[index] = new Song(song);
+    this.songsObserver.next(this.dataStore.songs);
+    this.songObserver.next(new Song(song));
   }
 
   private onRemoved(song: Song) {
     const index = this.getIndex(song._id);
     this.dataStore.songs.splice(index, 1);
-    this.songObserver.next(this.dataStore.songs);
+    this.songsObserver.next(this.dataStore.songs);
   }
 }

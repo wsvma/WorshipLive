@@ -9,7 +9,6 @@ export class SongInDb {
     sequence: string = '';
     key: string = '';
     category: string = '';
-    wordcount: string = '';
     numwords: number = 0;
     capo: string = '';
     timing: string = '';
@@ -23,8 +22,7 @@ export class Song extends SongInDb {
 
     constructor(songInDb: SongInDb) {
         super();
-        for (let prop in songInDb)
-            this[prop] = songInDb[prop];
+        Object.assign(this, songInDb);
     }
 
     get title() : string {

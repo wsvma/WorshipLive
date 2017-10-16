@@ -30,6 +30,7 @@
     "has-chinese": "^0.1.0",
     "jquery": "^3.2.1",
     "ng2-bootstrap-modal": "^1.0.1",
+    "parse-numeric-range": "0.0.2",
     "popper.js": "^1.12.5",
     "rxjs": "^5.4.2",
     "socket.io-client": "^2.0.3",

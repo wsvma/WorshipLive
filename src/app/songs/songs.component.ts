@@ -10,6 +10,13 @@ import { DataTableResource, DataTable } from 'angular-4-data-table';
 import * as wordcount from 'wordcount';
 import * as hasChinese from 'has-chinese';
 import * as fuzzy from 'fuzzy';
+import * as rangeParser from 'parse-numeric-range';
+
+class Filters {
+  title: string = '';
+  lyrics: string = '';
+  wordcount: string = '';
+}
 
 class DataColumn {
   constructor(
@@ -26,12 +33,12 @@ class DataColumn {
 })
 export class SongsComponent implements OnInit, OnDestroy {
 
+  filters: Filters = new Filters();
   songs: Song[] = [];
   items: Song[] = [];
   itemCount = 0;
   itemLimit = Math.floor((window.parent.innerHeight - 200) / 55);
   subscription: Subscription;
-  searchString: string = '';
   dataTableResource : DataTableResource<Song>;
   dataColumns : DataColumn[] = [
     new DataColumn('title', 'Title'),
@@ -80,9 +87,26 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   filterSongs() {
-    let filteredSongs = (this.searchString) ? this.songs.filter(s => {
-      return fuzzy.filter(this.searchString, [s.title_1, s.lyrics]).length > 0;
-    }) : this.songs;
+    let filteredSongs = this.songs;
+
+    if (this.filters.wordcount) {
+      let counts = rangeParser.parse(this.filters.wordcount);
+      console.log(counts);
+      filteredSongs = filteredSongs.filter(s => {
+        return counts.includes(s.numwords);
+      });
+    }
+
+    if (this.filters.title)
+      filteredSongs = filteredSongs.filter(s => {
+        return fuzzy.filter(this.filters.title, [s.title_1, s.title_2]).length > 0;
+      });
+
+    if (this.filters.lyrics)
+      filteredSongs = filteredSongs.filter(s => {
+        return fuzzy.filter(this.filters.lyrics, [s.lyrics]).length > 0;
+      });
+
     this.initializeDataTable(filteredSongs);
   }
 

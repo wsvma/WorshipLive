@@ -4,6 +4,13 @@
 html {
     overflow-x: hidden;
 }
-.container-fluid {
-    padding: 0;
+body{
+    height: 100vh;
+}
+.flex-1 {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
 }

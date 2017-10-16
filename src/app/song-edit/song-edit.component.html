@@ -1,3 +1,18 @@
-<p>
-  song-edit works!
-</p>
+<div class="d-flex flex-column h-100" *ngIf="song">
+  <div class="flex-1">
+    <form>
+      <div class="form-group">
+        <label for="title_1">Title 1</label>
+        <input class="form-control" type="text" id="title_1" name="title_1" [(ngModel)]="song.title_1">
+      </div>
+      <div class="form-group">
+        <label for="title_2">Title 2</label>
+        <input class="form-control" type="text" id="title_2" name="title_2" [(ngModel)]="song.title_2">
+      </div>
+    </form>
+  </div>
+  <div class="d-flex flex-1">
+    <div class="flex-1" style="background-color: red">A</div>
+    <div class="flex-1" style="background-color: blue">B</div>
+  </div>
+</div>

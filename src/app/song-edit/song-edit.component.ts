@@ -2,8 +2,6 @@ import { Observer, Subscription } from 'rxjs/Rx';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
-
 import { Component, OnDestroy, OnInit, PACKAGE_ROOT_URL } from '@angular/core';
 
 interface EditField {
@@ -38,10 +36,10 @@ export class SongEditComponent implements OnInit, OnDestroy {
     { name: 'license_admin1', label: 'License Admin', style: { width: '30%' } },
   ];
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private songService: SongsService) {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private songService: SongsService) {
+
     this.songId = this.route.snapshot.paramMap.get('id');
     this.song = new Song(new SongInDb());
     this.original = Object.assign({}, this.song);
@@ -56,7 +54,6 @@ export class SongEditComponent implements OnInit, OnDestroy {
           this.original = Object.assign({}, song);
         },
         error: (err) => {
-          console.log(err);
           this.song = null;
           this.errorMessage = err.message;
         },
@@ -92,11 +89,17 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   addNewSong() {
+    delete this.song._id;
     this.songService.create(this.song)
-      .then(()=>this.navigateBack());
+      .then((song)=> {
+        this.router.navigate(['/songs'], { queryParams: { newsong: song._id}});
+      });
   }
 
   saveChanges() {
-    this.songService.update(this.song);
+    this.songService.update(this.song)
+      .then((song)=> {
+        this.router.navigate(['/songs'], { queryParams: { songupdated: song._id}});
+      })
   }
 }

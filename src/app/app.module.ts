@@ -16,6 +16,8 @@ import { SongsComponent } from './songs/songs.component';
 import { WorshipComponent } from './worship/worship.component';
 import { SongEditComponent } from './song-edit/song-edit.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const ROUTES = [
   {
@@ -50,6 +52,8 @@ const ROUTES = [
     FormsModule,
     DataTableModule,
     BootstrapModalModule,
+    BrowserAnimationsModule,
+    ToastModule.forRoot(),
     NgbModule.forRoot(),
     RouterModule.forRoot(ROUTES)
   ],

@@ -74,17 +74,23 @@ export class SongsService {
 
   public async create(song: Song) {
     song.last_modified = toMyDateFormat(new Date());
-    await this.service.create(song.songInDbFormat);
+    return await this.service.create(song.songInDbFormat);
   }
 
-  public update(song: Song) {
+  public async update(song: Song) {
     song.last_modified = toMyDateFormat(new Date());
-    this.service.update(song._id, song.songInDbFormat);
+    return await this.service.update(song._id, song.songInDbFormat);
   }
 
-  public remove(songs: Song[]) {
-    for (let song of songs)
-      this.service.remove(song._id);
+  public async remove(songs: Song[]) {
+    return await Promise.all(songs.map(song => this.service.remove(song._id)));
+  }
+
+  public lookup(id: string) {
+    let index = this.getIndex(id);
+    if (index == -1)
+      return null;
+    return this.dataStore.songs[index];
   }
 
   private getIndex(id: string): number {

@@ -1,21 +1,38 @@
-<div class="d-flex flex-column h-100" *ngIf="song">
-  <div class="flex-1" *ngIf="!song.removed; else songRemoved">
-    <form>
-      <div class="form-group">
-        <label for="title_1">Title 1</label>
-        <input class="form-control" type="text" id="title_1" name="title_1" [(ngModel)]="song.title_1">
+<div *ngIf="song" class="h-100">
+  <div *ngIf="!song.removed;then edit else showError"></div>
+  <ng-template #edit>
+    <div class="d-flex flex-column h-100">
+      <div *ngIf="!song.removed; else songRemoved">
+        <form class="d-flex flex-wrap">
+          <div class="form-group px-1" *ngFor="let field of editFields" [ngStyle]="field.style">
+            <label for="field.name">{{ field.label }}</label>
+            <input class="form-control" type="text" [id]="field.name" [name]="field.name" [(ngModel)]="song[field.name]">
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="title_2">Title 2</label>
-        <input class="form-control" type="text" id="title_2" name="title_2" [(ngModel)]="song.title_2">
+      <div class="d-flex flex-1 flex-wrap">
+        <form class="flex-1">
+          <div class="form-group d-flex flex-column h-100 px-1">
+            <label for="lyrics1">Lyrics (Region 1)</label>
+            <textarea class="form-control flex-1" id="lyrics1" name="lyrics1"
+              [(ngModel)]="song.lyrics" (scroll)="onScroll($event)"></textarea>
+          </div>
+        </form>
+        <form class="flex-1">
+          <div class="form-group d-flex flex-column h-100 px-1">
+            <label for="lyrics2">Lyrics (Region 2)</label>
+            <textarea class="form-control flex-1" id="lyrics2" name="lyrics2"
+              [(ngModel)]="song.lyrics" (scroll)="onScroll($event)"></textarea>
+          </div>
+        </form>
+        <div class="d-flex flex-column justify-content-end px-1">
+          <button class="btn btn-default mt-2" (click)="saveChanges()" [disabled]="!isModified()" >Save changes</button>
+          <button class="btn btn-default mt-2" (click)="navigateBack()">Cancel</button>
+        </div>
       </div>
-    </form>
-  </div>
-  <ng-template #songRemoved>
+    </div>
+  </ng-template>
+  <ng-template #showError>
     <h3>Song is no longer in database, probably removed by another client.</h3>
   </ng-template>
-  <div class="d-flex flex-1">
-    <div class="flex-1" style="background-color: red">A</div>
-    <div class="flex-1" style="background-color: blue">B</div>
-  </div>
 </div>

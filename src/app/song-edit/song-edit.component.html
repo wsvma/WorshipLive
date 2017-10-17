@@ -1,4 +1,4 @@
-<div *ngIf="song" class="h-100">
+<div *ngIf="song else showError" class="h-100">
   <div *ngIf="!song.removed;then edit else showError"></div>
   <ng-template #edit>
     <div class="d-flex flex-column h-100">
@@ -32,7 +32,7 @@
       </div>
     </div>
   </ng-template>
-  <ng-template #showError>
-    <h3>Song is no longer in database, probably removed by another client.</h3>
-  </ng-template>
 </div>
+<ng-template #showError>
+  {{ errorMessage }}
+</ng-template>

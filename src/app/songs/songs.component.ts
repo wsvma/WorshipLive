@@ -61,7 +61,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.songService.find().subscribe((songs: Song[]) => {
       this.songs = songs;
-      this.initializeDataTable(songs);
+      this.filterSongs();
     });
   }
 
@@ -114,6 +114,19 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/songs/' + song._id);
   }
 
+  onMouseWheel($event) {
+    if (this.dataTable) {
+      let increment = $event.deltaY > 0 ? 1 : -1;
+      let newPage = this.dataTable.page + increment;
+      newPage = Math.min(newPage, this.dataTable.lastPage);
+      newPage = Math.max(newPage, 1);
+      if (newPage != this.dataTable.page) {
+        this.dataTable.selectedRows = [];
+        this.dataTable.page = newPage;
+      }
+    }
+  }
+
   removeSongs() {
     this.dialogService.addDialog(ConfirmDialogComponent, {
       title: 'Confirm removal',
@@ -135,6 +148,7 @@ export class SongsComponent implements OnInit, OnDestroy {
 
   private initializeDataTable(songs: Song[]) {
     this.dataTableResource = new DataTableResource(songs);
+    if (this.dataTable) this.dataTable.page = 1;
     this.reload({offset: 0, limit: this.dataTable ? this.dataTable.limit : this.itemLimit});
   }
 }

@@ -25,7 +25,7 @@
       </form>
     </div>
   </div>
-  <div class="songtable">
+  <div class="songtable" (mousewheel)="onMouseWheel($event)">
     <button type="button" class="btn btn-default">Add New</button>
     <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0"                        >Add to Worship...</button>
     <button type="button" class="btn btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeSongs()">Remove</button>

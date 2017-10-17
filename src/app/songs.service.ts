@@ -35,8 +35,9 @@ export class SongsService {
       this.find$ = new Observable(observer => {
         this.findObservers.push(observer);
         this.service.find((err, songs: SongInDb[]) => {
-          if (err) return console.error(err);
-
+          if (err) {
+            observer.error(err);
+          }
           this.dataStore.songs = [];
           for (let s of songs) {
             let newSong: Song = new Song(s);
@@ -58,7 +59,10 @@ export class SongsService {
       } else {
         this.getObservers[id] = [observer];
         this.service.get(id, (err, song: SongInDb) => {
-          if (err) return console.error(err);
+          if (err) {
+            observer.error(err);
+            return;
+          }
           this.dataStore.song[id] = new Song(song);
           observer.next(this.dataStore.song[id]);
         });
@@ -106,8 +110,10 @@ export class SongsService {
     this.dataStore.songs[index] = new Song(song);
     this.updateFindObservers();
 
-    this.dataStore.song[song._id] = new Song(song);
-    this.updateGetObservers(song._id);
+    if (song._id in this.dataStore.song) {
+      this.dataStore.song[song._id] = new Song(song);
+      this.updateGetObservers(song._id);
+    }
   }
 
   private onRemoved(song: Song) {
@@ -116,7 +122,9 @@ export class SongsService {
     this.dataStore.songs.splice(index, 1);
     this.updateFindObservers();
 
-    this.dataStore.song[song._id].removed = true;
-    this.updateGetObservers(song._id);
+    if (song._id in this.dataStore.song) {
+      this.dataStore.song[song._id].removed = true;
+      this.updateGetObservers(song._id);
+    }
   }
 }

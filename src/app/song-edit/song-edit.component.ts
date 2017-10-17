@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs/Rx';
+import { Observer, Subscription } from 'rxjs/Rx';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +23,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
   song : Song;
   original: Song;
   subscription: Subscription;
+  errorMessage: string = "Song is no longer in database. Someone removed it just now.";
 
   editFields = [
     { name: 'title_1'       , label: 'Title 1'      , style: { width: '25%' } },
@@ -45,10 +46,19 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.songService.get(this.songId).subscribe((song: Song) => {
-      this.song = song;
-      this.original = {...song};
-    });
+    let observer : Observer<Song> = {
+      next: (song) => {
+        this.song = song;
+        this.original = { ...song };
+      },
+      error: (err) => {
+        console.log(err);
+        this.song = null;
+        this.errorMessage = err.message;
+      },
+      complete: () => {}
+    }
+    this.subscription = this.songService.get(this.songId).subscribe(observer);
   }
 
   ngOnDestroy() {

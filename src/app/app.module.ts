@@ -24,12 +24,12 @@ const ROUTES = [
     pathMatch: 'full'
   },
   {
-    path: 'songs',
-    component: SongsComponent
-  },
-  {
     path: 'songs/:id',
     component: SongEditComponent
+  },
+  {
+    path: 'songs',
+    component: SongsComponent
   },
   {
     path: 'worship',

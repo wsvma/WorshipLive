@@ -2,21 +2,21 @@
   <div class="filter">
     <h5>Filter songs by:</h5>
     <div class="d-sm-flex flex-sm-wrap">
-      <form class="form-inline" style="flex: 1 0 200px">
+      <form class="form-inline my-1" style="flex: 1 0 200px">
         <div class="form-group w-100">
           <label class="sr-only" for="title_filter">Title</label>
           <input name="title_filter" type="text"
             [(ngModel)]="filters.title" class="form-control w-100" id="title_filter" placeholder="Title" (keyup)="filterSongs()">
         </div>
       </form>
-      <form class="form-inline" style="flex: 1 0 200px">
+      <form class="form-inline my-1" style="flex: 1 0 200px">
         <div class="form-group w-100">
           <label class="sr-only" for="lyrics_filter">Lyrics</label>
           <input name="lyrics_filter" type="text"
             [(ngModel)]="filters.lyrics" class="form-control w-100" id="lyrics_filter" placeholder="Lyrics" (keyup)="filterSongs()">
         </div>
       </form>
-      <form class="form-inline" style="flex: 1 0 200px">
+      <form class="form-inline my-1" style="flex: 1 0 200px">
         <div class="form-group w-100">
           <label class="sr-only" for="wordcount_filter">Number of words</label>
           <input name="wordcount_filter" type="text"
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="songtable" (mousewheel)="onMouseWheel($event)">
-    <button type="button" class="btn btn-default">Add New</button>
+    <button type="button" class="btn btn-default" (click)="routeToNewSong()">Add New</button>
     <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0"                        >Add to Worship...</button>
     <button type="button" class="btn btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeSongs()">Remove</button>
     <button type="button" class="btn btn-default" [hidden]="numRowsSelected()!=1" (click)="routeToEdit()">View/Modify</button>

@@ -114,6 +114,10 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/songs/' + song._id);
   }
 
+  routeToNewSong() {
+    this.router.navigateByUrl('/songs/new');
+  }
+
   onMouseWheel($event) {
     if (this.dataTable) {
       let increment = $event.deltaY > 0 ? 1 : -1;

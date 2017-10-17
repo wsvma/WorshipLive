@@ -1,3 +1,6 @@
+import * as countWord from 'wordcount';
+import * as hasChinese from 'has-chinese';
+import { toMyDateFormat } from '../utils/utils'
 
 export class SongInDb {
     song_id: string = '';
@@ -34,16 +37,24 @@ export class Song extends SongInDb {
     }
 
     get last_modified_iso() {
-        let d = new Date(this.last_modified);
-        return ''+ d.getFullYear() + '-' +
-            ('0'+(d.getMonth()+1)).slice(-2) + '-' +
-            ('0'+d.getDate()).slice(-2);
-      }
+        return toMyDateFormat(new Date(this.last_modified));
+    }
 
     get songInDbFormat() : SongInDb {
         let songInDb: SongInDb = new SongInDb();
+        this.countWordsInTitle();
         for (let prop in songInDb)
             songInDb[prop] = this[prop];
         return songInDb;
+    }
+
+    countWordsInTitle() {
+        if (!this.title_1) {
+            this.title_1 = 'Untitled';
+        }
+        if (hasChinese(this.title_1))
+            this.numwords = this.title_1.length;
+        else
+            this.numwords = countWord(this.title_1);
     }
 }

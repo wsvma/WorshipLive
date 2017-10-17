@@ -19,10 +19,11 @@ interface EditField {
 })
 export class SongEditComponent implements OnInit, OnDestroy {
 
+  addNew : boolean = false;
   songId : string;
   song : Song;
   original: Song;
-  subscription: Subscription;
+  subscription: Subscription = null;
   errorMessage: string = "Song is no longer in database. Someone removed it just now.";
 
   editFields = [
@@ -42,27 +43,32 @@ export class SongEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private songService: SongsService) {
     this.songId = this.route.snapshot.paramMap.get('id');
-    this.song = this.original = new Song(new SongInDb());
+    this.song = new Song(new SongInDb());
+    this.original = Object.assign({}, this.song);
+    this.addNew = (this.songId === 'new');
   }
 
   ngOnInit() {
-    let observer : Observer<Song> = {
-      next: (song) => {
-        this.song = song;
-        this.original = { ...song };
-      },
-      error: (err) => {
-        console.log(err);
-        this.song = null;
-        this.errorMessage = err.message;
-      },
-      complete: () => {}
+    if (!this.addNew) {
+      let observer : Observer<Song> = {
+        next: (song) => {
+          this.song = song;
+          this.original = Object.assign({}, song);
+        },
+        error: (err) => {
+          console.log(err);
+          this.song = null;
+          this.errorMessage = err.message;
+        },
+        complete: () => {}
+      }
+      this.subscription = this.songService.get(this.songId).subscribe(observer);
     }
-    this.subscription = this.songService.get(this.songId).subscribe(observer);
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription)
+      this.subscription.unsubscribe();
   }
 
   isModified() {
@@ -83,6 +89,11 @@ export class SongEditComponent implements OnInit, OnDestroy {
 
   navigateBack() {
     this.router.navigateByUrl('/songs');
+  }
+
+  addNewSong() {
+    this.songService.create(this.song)
+      .then(()=>this.navigateBack());
   }
 
   saveChanges() {

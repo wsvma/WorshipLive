@@ -1,3 +1,4 @@
+import { toMyDateFormat } from '../utils/utils';
 import { Observable, Observer } from 'rxjs/Rx';
 import { FeatherService } from './feather.service';
 import { Injectable } from '@angular/core';
@@ -71,7 +72,13 @@ export class SongsService {
     return observable;
   }
 
+  public async create(song: Song) {
+    song.last_modified = toMyDateFormat(new Date());
+    await this.service.create(song.songInDbFormat);
+  }
+
   public update(song: Song) {
+    song.last_modified = toMyDateFormat(new Date());
     this.service.update(song._id, song.songInDbFormat);
   }
 

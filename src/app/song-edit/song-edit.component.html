@@ -26,7 +26,8 @@
           </div>
         </form>
         <div class="d-flex flex-column justify-content-end px-1">
-          <button class="btn btn-default mt-2" (click)="saveChanges()" [disabled]="!isModified()" >Save changes</button>
+          <button class="btn btn-default mt-2" (click)="saveChanges()" *ngIf="!addNew" [disabled]="!isModified()">Save changes</button>
+          <button class="btn btn-default mt-2" (click)="addNewSong()"  *ngIf="addNew"  [disabled]="!isModified()">Add Song</button>
           <button class="btn btn-default mt-2" (click)="navigateBack()">Cancel</button>
         </div>
       </div>

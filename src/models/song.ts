@@ -20,6 +20,8 @@ export class SongInDb {
 
 export class Song extends SongInDb {
 
+    removed: boolean = false;
+
     constructor(songInDb: SongInDb) {
         super();
         Object.assign(this, songInDb);

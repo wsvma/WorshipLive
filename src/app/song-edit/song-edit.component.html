@@ -1,5 +1,5 @@
 <div class="d-flex flex-column h-100" *ngIf="song">
-  <div class="flex-1">
+  <div class="flex-1" *ngIf="!song.removed; else songRemoved">
     <form>
       <div class="form-group">
         <label for="title_1">Title 1</label>
@@ -11,6 +11,9 @@
       </div>
     </form>
   </div>
+  <ng-template #songRemoved>
+    <h3>Song is no longer in database, probably removed by another client.</h3>
+  </ng-template>
   <div class="d-flex flex-1">
     <div class="flex-1" style="background-color: red">A</div>
     <div class="flex-1" style="background-color: blue">B</div>

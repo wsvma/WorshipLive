@@ -23,13 +23,11 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.songService.song$.subscribe((song: Song) => {
+    this.subscription = this.songService.get(this.songId).subscribe((song: Song) => {
       console.log("observer:", song);
-      if (song._id == this.songId)
-        this.song = song;
+      this.song = song;
     });
     console.log("oninit");
-    this.songService.get(this.songId);
   }
 
   ngOnDestroy() {

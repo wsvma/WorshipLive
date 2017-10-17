@@ -6,14 +6,13 @@ import { Song, SongInDb } from '../models/song'
 @Injectable()
 export class SongsService {
 
-  public songs$: Observable<Song[]>;
-  private songsObserver: Observer<Song[]>;
-
-  public song$: Observable<Song>;
-  private songObserver: Observer<Song>;
+  private find$: Observable<Song[]>;
+  private findObservers: Observer<Song[]>[] = [];
+  private getObservers: { [id:string]: Observer<Song>[] } = {};
 
   private service: any;
   private dataStore: {
+    song : { [id:string] : Song },
     songs: Song[];
   }
 
@@ -24,31 +23,48 @@ export class SongsService {
     this.service.on('updated', (song) => this.onUpdated(song));
     this.service.on('removed', (song) => this.onRemoved(song));
 
-    this.songs$ = new Observable(observer => this.songsObserver = observer);
-    this.song$  = new Observable(observer => this.songObserver = observer);
-
-    this.dataStore = { songs: [] };
+    this.dataStore = {
+      song: {},
+      songs: []
+    };
   }
 
-  public find(query) {
-    this.service.find(query, (err, songs: SongInDb[]) => {
-      if (err) return console.error(err);
+  public find() : Observable<Song[]> {
 
-      this.dataStore.songs = [];
-      for (let s of songs) {
-        let newSong: Song = new Song(s);
-        this.dataStore.songs.push(newSong);
-      }
-      this.songsObserver.next(this.dataStore.songs);
-    });
+    if (!this.find$) {
+      this.find$ = new Observable(observer => {
+        this.findObservers.push(observer);
+        this.service.find((err, songs: SongInDb[]) => {
+          if (err) return console.error(err);
+
+          this.dataStore.songs = [];
+          for (let s of songs) {
+            let newSong: Song = new Song(s);
+            this.dataStore.songs.push(newSong);
+          }
+          observer.next(this.dataStore.songs);
+        });
+      });
+    }
+    return this.find$;
   }
 
   public get(id: string) {
-    this.service.get(id, (err, song: SongInDb) => {
-      if (err) return console.error(err);
 
-      this.songObserver.next(new Song(song));
+    let observable = new Observable(observer => {
+      if (id in this.dataStore.song) {
+        this.getObservers[id].push(observer);
+        observer.next(this.dataStore.song[id]);
+      } else {
+        this.getObservers[id] = [observer];
+        this.service.get(id, (err, song: SongInDb) => {
+          if (err) return console.error(err);
+          this.dataStore.song[id] = new Song(song);
+          observer.next(this.dataStore.song[id]);
+        });
+      }
     });
+    return observable;
   }
 
   public update(song: Song) {
@@ -69,21 +85,38 @@ export class SongsService {
     return -1;
   }
 
+  private updateFindObservers() {
+    for (let observer of this.findObservers)
+      observer.next(this.dataStore.songs);
+  }
+
+  private updateGetObservers(id: string) {
+    for (let observer of this.getObservers[id])
+      observer.next(this.dataStore.song[id]);
+  }
+
   private onCreated(song: SongInDb) {
     this.dataStore.songs.push(new Song(song));
-    this.songsObserver.next(this.dataStore.songs);
+    this.updateFindObservers();
   }
 
   private onUpdated(song: SongInDb) {
+
     const index = this.getIndex(song._id);
     this.dataStore.songs[index] = new Song(song);
-    this.songsObserver.next(this.dataStore.songs);
-    this.songObserver.next(new Song(song));
+    this.updateFindObservers();
+
+    this.dataStore.song[song._id] = new Song(song);
+    this.updateGetObservers(song._id);
   }
 
   private onRemoved(song: Song) {
+
     const index = this.getIndex(song._id);
     this.dataStore.songs.splice(index, 1);
-    this.songsObserver.next(this.dataStore.songs);
+    this.updateFindObservers();
+
+    this.dataStore.song[song._id].removed = true;
+    this.updateGetObservers(song._id);
   }
 }

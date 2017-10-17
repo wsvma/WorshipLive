@@ -59,11 +59,10 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.songService.songs$.subscribe((songs: Song[]) => {
+    this.subscription = this.songService.find().subscribe((songs: Song[]) => {
       this.songs = songs;
       this.initializeDataTable(songs);
     });
-    this.songService.find({});
   }
 
   ngOnDestroy() {

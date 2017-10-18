@@ -21,6 +21,7 @@ class DataColumn {
   constructor(
     public property: string,
     public header: string,
+    public visible: boolean,
     public sortable: boolean = true,
     public resizable: boolean = true) {}
 }
@@ -39,9 +40,12 @@ export class SongsComponent implements OnInit {
   itemLimit = Math.floor((window.parent.innerHeight - 200) / 55);
   dataTableResource : DataTableResource<Song>;
   dataColumns : DataColumn[] = [
-    new DataColumn('title', 'Title'),
-    new DataColumn('numwords', '# Words'),
-    new DataColumn('last_modified', 'Last Modified'),
+    new DataColumn('title', 'Title', true),
+    new DataColumn('writer', 'Writer', false),
+    new DataColumn('numwords', '# Words', true),
+    new DataColumn('category', 'Category', false),
+    new DataColumn('key', 'Key', false),
+    new DataColumn('last_modified', 'Last Modified', true),
   ];
 
   @ViewChild(DataTable) dataTable;

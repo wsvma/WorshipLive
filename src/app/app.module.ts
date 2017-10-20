@@ -1,15 +1,12 @@
+import { SongsServiceProvider } from './songs.service.provider';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { CustomReuseStrategy } from './custom.reusestrategy';
-import { SongsService } from './songs.service';
-import { FeatherService } from './feather.service';
 import { RouteReuseStrategy, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataTableModule } from 'angular-4-data-table';
 import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import * as io from 'socket.io-client';
-import * as feathers from 'feathers-client';
 
 import { AppComponent } from './app.component';
 import { SongsComponent } from './songs/songs.component';
@@ -58,8 +55,7 @@ const ROUTES = [
     RouterModule.forRoot(ROUTES)
   ],
   providers: [
-    FeatherService,
-    SongsService,
+    SongsServiceProvider,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],

@@ -1,9 +1,9 @@
+import { DbObj, DbObjBase } from './dbobj';
 import * as countWord from 'wordcount';
 import * as hasChinese from 'has-chinese';
 import { toMyDateFormat } from '../utils/utils'
 
-export class SongInDb {
-    song_id: string = '';
+export class SongInDb extends DbObjBase {
     title_1: string = '';
     title_2: string = '';
     writer: string = '';
@@ -17,13 +17,11 @@ export class SongInDb {
     timing: string = '';
     license_admin1: string = '';
     license_admin2: string = '';
-    _id: string = '';
-    last_modified: string = '';
 }
 
-export class Song extends SongInDb {
+export class Song extends SongInDb implements DbObj {
 
-    removed: boolean = false;
+    removed: boolean;
 
     constructor(songInDb: SongInDb) {
         super();
@@ -40,7 +38,7 @@ export class Song extends SongInDb {
         return toMyDateFormat(new Date(this.last_modified));
     }
 
-    get songInDbFormat() : SongInDb {
+    get toBaseFormat() : SongInDb {
         let songInDb: SongInDb = new SongInDb();
         this.countWordsInTitle();
         for (let prop in songInDb)

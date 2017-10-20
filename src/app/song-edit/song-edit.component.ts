@@ -17,6 +17,7 @@ interface EditField {
 })
 export class SongEditComponent implements OnInit, OnDestroy {
 
+  tab = 'songs';
   addNew : boolean = false;
   songId : string;
   song : Song;

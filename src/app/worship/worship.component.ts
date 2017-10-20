@@ -7,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WorshipComponent implements OnInit {
 
+  tab = 'worship';
+
   constructor() { }
 
   ngOnInit() {
   }
-
 }

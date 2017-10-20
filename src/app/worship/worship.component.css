@@ -1,0 +1,21 @@
+.center-holder {
+    width: 85%;
+    height: 90%;
+    margin: auto;
+    padding: 10px;
+    border: solid 1px #ccc;
+}
+
+.worship-select {
+    width: 60%;
+    padding: 10px;
+}
+
+.preview {
+    flex: 1;
+    padding: 10px;
+}
+
+.debug-border {
+    border: solid 1px #ccc;
+}

@@ -2,7 +2,7 @@
   <div *ngIf="!song.removed;then edit else showError"></div>
   <ng-template #edit>
     <div class="d-flex flex-column h-100">
-      <div *ngIf="!song.removed; else songRemoved">
+      <div *ngIf="!song.removed; else showError">
         <form class="d-flex flex-wrap">
           <div class="form-group px-1" *ngFor="let field of editFields" [ngStyle]="field.style">
             <label for="field.name">{{ field.label }}</label>

@@ -33,6 +33,7 @@ class DataColumn {
 })
 export class SongsComponent implements OnInit {
 
+  tab: string = 'songs';
   filters: Filters = new Filters();
   songs: Song[] = [];
   items: Song[] = [];

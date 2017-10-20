@@ -21,11 +21,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const ROUTES = [
   {
-    path: '',
-    redirectTo: 'songs',
-    pathMatch: 'full'
-  },
-  {
     path: 'songs/:id',
     component: SongEditComponent
   },
@@ -36,6 +31,11 @@ const ROUTES = [
   {
     path: 'worship',
     component: WorshipComponent
+  },
+  {
+    path: '',
+    redirectTo: 'songs',
+    pathMatch: 'full'
   },
 ];
 

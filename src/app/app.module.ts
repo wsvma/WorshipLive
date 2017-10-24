@@ -1,3 +1,4 @@
+import { WorshipsServiceProvider } from './worships.service.provider';
 import { SongsServiceProvider } from './songs.service.provider';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { CustomReuseStrategy } from './custom.reusestrategy';
@@ -56,6 +57,7 @@ const ROUTES = [
   ],
   providers: [
     SongsServiceProvider,
+    WorshipsServiceProvider,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],

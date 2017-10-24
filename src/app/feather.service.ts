@@ -89,7 +89,8 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     }
 
     public async create(obj: T) {
-      obj['last_modified'] = toMyDateFormat(new Date());
+      delete obj['_id'];
+      obj['date_created'] = obj['last_modified'] = toMyDateFormat(new Date());
       return await this.service.create(obj.toBaseFormat);
     }
 

@@ -1,4 +1,4 @@
-import { Song, SongInDb } from '../models/song';
+import { Song } from '../models/song';
 import { SongsService } from './songs.service';
 
 export let songsServiceFactory = () => {

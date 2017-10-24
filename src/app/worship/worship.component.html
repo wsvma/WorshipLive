@@ -2,15 +2,29 @@
   <div class="center-holder d-flex flex-column">
     <div>
       <h4>Create or Open a worship session to start...</h4>
-      <button class="btn btn-primary my-2">Create</button>
-      <button class="btn btn-primary my-2" disabled="true">Open</button>
-      <button class="btn btn-primary my-2" disabled="true">Clone</button>
-      <button class="btn btn-danger  my-2" disabled="true">Remove</button>
+      <button type="button" class="btn btn-primary my-2" (click)="create()">Create</button>
+      <button type="button" class="btn btn-primary my-2" disabled="true">Open</button>
+      <button type="button" class="btn btn-primary my-2" disabled="true">Clone</button>
+      <button type="button" class="btn btn-danger  my-2" (click)="removeWorships()" disabled="true">Remove</button>
     </div>
     <div class="d-flex debug-border p-2 my-2 flex-1">
       <div class="worship-select debug-border mx-2">
-        <data-table>
-
+        <data-table
+          [items]="items"
+          [itemCount]="itemCount"
+          [limit]="itemLimit"
+          [sortBy]="'date_created'"
+          (reload)="reload($event)"
+          [selectOnRowClick]="true"
+          [multiSelect]="true"
+          [selectColumn]="true">
+          <data-table-column *ngFor="let col of dataColumns"
+            [property]="col.property"
+            [header]="col.header"
+            [resizable]="col.resizable"
+            [sortable]="col.sortable"
+            [visible]="col.visible">
+        </data-table-column>
         </data-table>
       </div>
       <div class="preview debug-border mx-2 d-flex">

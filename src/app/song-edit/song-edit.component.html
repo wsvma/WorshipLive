@@ -6,7 +6,7 @@
         <form class="d-flex flex-wrap">
           <div class="form-group px-1" *ngFor="let field of editFields" [ngStyle]="field.style">
             <label for="field.name">{{ field.label }}</label>
-            <input class="form-control" type="text" [id]="field.name" [name]="field.name" [(ngModel)]="song[field.name]">
+            <input class="form-control" type="text" [id]="field.name" [name]="field.name" [(ngModel)]="song[field.name]" (keyup)="onKeyUp($event)">
           </div>
         </form>
       </div>
@@ -28,7 +28,7 @@
         <div class="d-flex flex-column justify-content-end px-1">
           <button class="btn btn-default mt-2" (click)="saveChanges()" *ngIf="!addNew" [disabled]="!isModified()">Save changes</button>
           <button class="btn btn-default mt-2" (click)="addNewSong()"  *ngIf="addNew"  [disabled]="!isModified()">Add Song</button>
-          <button class="btn btn-default mt-2" (click)="navigateBack()">Cancel</button>
+          <button class="btn btn-default mt-2" (click)="navigateBack()">Cancel / Back</button>
         </div>
       </div>
     </div>

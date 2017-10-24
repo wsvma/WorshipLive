@@ -1,3 +1,4 @@
+import { TabDisplayService } from '../tab-display.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
@@ -17,7 +18,8 @@ interface EditField {
 })
 export class SongEditComponent implements OnInit, OnDestroy {
 
-  tab = 'songs';
+  tabSelected = 'songs';
+  defaultTabDisplay = 'Songs';
   addNew : boolean = false;
   songId : string;
   song : Song;
@@ -39,12 +41,22 @@ export class SongEditComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private songService: SongsService) {
+              private songService: SongsService,
+              private tabService: TabDisplayService) {
 
     this.songId = this.route.snapshot.paramMap.get('id');
     this.song = new Song(new SongInDb());
     this.original = Object.assign({}, this.song);
     this.addNew = (this.songId === 'new');
+  }
+
+  get tabDisplay() {
+    return 'Song (' + this.song.title + ')';
+  }
+
+  onKeyUp($event: KeyboardEvent) {
+    //if ($event.srcElement.id.includes('title'))
+      this.tabService.pushNewDisplay(this.tabDisplay);
   }
 
   ngOnInit() {
@@ -53,6 +65,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
         next: (song) => {
           this.song = song;
           this.original = Object.assign({}, song);
+          this.tabService.pushNewDisplay(this.tabDisplay);
         },
         error: (err) => {
           this.song = null;

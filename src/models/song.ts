@@ -31,7 +31,9 @@ export class Song extends SongInDb implements DbObj {
     get title() : string {
         if (this.title_2)
             return this.title_1 + ' | ' + this.title_2;
-        return this.title_1;
+        if (this.title_1)
+            return this.title_1;
+        return 'Untitled';
     }
 
     get last_modified_iso() {

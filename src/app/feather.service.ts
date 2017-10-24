@@ -4,7 +4,7 @@ import { Observable, Observer } from 'rxjs/Rx';
 import * as io from 'socket.io-client';
 import feathers from 'feathers-client';
 
-export class FeatherService {
+export abstract class FeatherService<T> {
 
   private _url = 'http://192.168.1.20:3030';
   private feathersApp : any;
@@ -16,9 +16,16 @@ export class FeatherService {
   getService(name: string) {
     return this.feathersApp.service(name);
   }
+
+  public abstract find() : Observable<T[]>;
+  public abstract get(id: string);
+  public abstract async create(obj: T);
+  public abstract async update(obj: T);
+  public abstract async remove(objects: T[]);
+  public abstract lookup(id: string);
 }
 
-export class GenericService<T extends DbObj, TBase extends DbObjBase> extends FeatherService {
+export class GenericService<T extends DbObj, TBase extends DbObjBase> extends FeatherService<T> {
 
     private find$: Observable<T[]>;
     private findObservers: Observer<T[]>[] = [];

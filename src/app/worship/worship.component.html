@@ -3,9 +3,9 @@
     <div>
       <h4>Create or Open a worship session to start...</h4>
       <button type="button" class="btn btn-primary my-2" (click)="create()">Create</button>
-      <button type="button" class="btn btn-primary my-2" disabled="true">Open</button>
-      <button type="button" class="btn btn-primary my-2" disabled="true">Clone</button>
-      <button type="button" class="btn btn-danger  my-2" (click)="removeWorships()" disabled="true">Remove</button>
+      <button type="button" class="btn btn-primary my-2" [hidden]="numRowsSelected()!=1">Open</button>
+      <button type="button" class="btn btn-primary my-2" [hidden]="numRowsSelected()!=1">Clone</button>
+      <button type="button" class="btn btn-danger  my-2" (click)="removeData()" [hidden]="numRowsSelected()==0">Remove</button>
     </div>
     <div class="d-flex debug-border p-2 my-2 flex-1">
       <div class="worship-select debug-border mx-2">

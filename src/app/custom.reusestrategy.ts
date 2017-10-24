@@ -1,10 +1,12 @@
+import { Inject } from '@angular/core';
+import { TabDisplayService } from './tab-display.service';
 import { RouteReuseStrategy, ActivatedRouteSnapshot, DetachedRouteHandle} from '@angular/router';
 
 export class CustomReuseStrategy implements RouteReuseStrategy {
 
       private handles: {[key: string]: DetachedRouteHandle} = {};
 
-      constructor() {
+      constructor(@Inject(TabDisplayService) private tabService: TabDisplayService) {
 
       }
 
@@ -27,6 +29,8 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
       }
 
       retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
+        if (this.url(route) === 'songs')
+          this.tabService.pushNewDisplay('Songs');
         return this.handles[this.url(route)];
       }
 

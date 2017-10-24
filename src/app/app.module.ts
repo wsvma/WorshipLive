@@ -1,3 +1,4 @@
+import { TabDisplayService } from './tab-display.service';
 import { WorshipsServiceProvider } from './worships.service.provider';
 import { SongsServiceProvider } from './songs.service.provider';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
@@ -58,6 +59,7 @@ const ROUTES = [
   providers: [
     SongsServiceProvider,
     WorshipsServiceProvider,
+    TabDisplayService,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],

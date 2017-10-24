@@ -1,10 +1,10 @@
 <div class="d-flex flex-column h-100">
   <ul class="nav nav-tabs" style="flex: 0 0 auto">
-      <li class="nav-item">
-          <a class="nav-link" routerLink="worship" [ngClass]="{active: tabSelected === 'worship'}" (click)="tabSelected = 'worship'">Worship</a>
-        </li>
     <li class="nav-item">
-      <a class="nav-link" routerLink="songs" [ngClass]="{active: tabSelected === 'songs'}" (click)="tabSelected = 'songs'">Songs</a>
+      <a #worship class="nav-link" id="worship" routerLink="worship" [ngClass]="{active: tabSelected === 'worship'}" (click)="onTabSelected(worship)">Worship</a>
+    </li>
+    <li class="nav-item">
+      <a #songs class="nav-link" id="songs" routerLink="songs" [ngClass]="{active: tabSelected === 'songs'}" (click)="onTabSelected(songs)">Songs</a>
     </li>
   </ul>
   <div class="flex-1 router-outlet-container">

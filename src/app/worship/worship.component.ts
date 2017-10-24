@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { TabDisplayService } from '../tab-display.service';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ToastsManager } from 'ng2-toastr';
@@ -16,7 +17,6 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 export class WorshipComponent extends ComponentWithDataTable<Worship> implements OnInit {
 
   tabSelected = 'worship';
-  defaultTabDisplay = 'Worships';
   dataColumns : DataColumn[] = [
     new DataColumn('name',         'Name',   true),
     new DataColumn('date_created',  'Date Created', true),
@@ -25,13 +25,14 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
 
   constructor(private worshipService: WorshipsService,
               private tabService: TabDisplayService,
+              private router: Router,
               vcr: ViewContainerRef,
               toastr: ToastsManager,
               dialogService: DialogService) {
 
     super(vcr, toastr, dialogService);
     this.dataService = worshipService;
-   }
+  }
 
   ngOnInit() {
     this.tabService.pushNewDisplay('Worship');
@@ -41,9 +42,21 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
     })
   }
 
+  worshipDoubleClicked(event) {
+    let worship = event.row.item;
+    this.dataTable.selectedRows = [];
+    this.router.navigateByUrl('/worship/' + worship._id);
+  }
+
   create() {
     let w = new Worship(new WorshipInDb());
-    w.name = new Date().toTimeString();
+    w.name = new Date().toDateString();
     this.worshipService.create(w);
+  }
+
+  routeToEdit() {
+    let worship = this.dataTable.selectedRows[0].item;
+    this.dataTable.selectedRows = [];
+    this.router.navigateByUrl('/worship/' + worship._id);
   }
 }

@@ -19,7 +19,6 @@ interface EditField {
 export class SongEditComponent implements OnInit, OnDestroy {
 
   tabSelected = 'songs';
-  defaultTabDisplay = 'Songs';
   addNew : boolean = false;
   songId : string;
   song : Song;
@@ -55,7 +54,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   onKeyUp($event: KeyboardEvent) {
-    //if ($event.srcElement.id.includes('title'))
+    if ($event.srcElement.id.includes('title'))
       this.tabService.pushNewDisplay(this.tabDisplay);
   }
 

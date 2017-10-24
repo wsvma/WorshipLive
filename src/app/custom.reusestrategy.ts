@@ -31,6 +31,8 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
       retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
         if (this.url(route) === 'songs')
           this.tabService.pushNewDisplay('Songs');
+        if (this.url(route) === 'worship')
+          this.tabService.pushNewDisplay('Worship');
         return this.handles[this.url(route)];
       }
 

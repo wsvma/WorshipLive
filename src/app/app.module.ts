@@ -17,6 +17,7 @@ import { SongEditComponent } from './song-edit/song-edit.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WorshipEditComponent } from './worship-edit/worship-edit.component';
 
 const ROUTES = [
   {
@@ -26,6 +27,10 @@ const ROUTES = [
   {
     path: 'songs',
     component: SongsComponent
+  },
+  {
+    path: 'worship/:id',
+    component: WorshipEditComponent
   },
   {
     path: 'worship',
@@ -45,6 +50,7 @@ const ROUTES = [
     WorshipComponent,
     SongEditComponent,
     ConfirmDialogComponent,
+    WorshipEditComponent,
   ],
   imports: [
     BrowserModule,

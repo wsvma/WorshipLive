@@ -71,15 +71,15 @@ export class ComponentWithDataTable<DataType> {
         this.dialogService.addDialog(ConfirmDialogComponent, {
             title: 'Confirm removal',
             message: this.numRowsSelected() + ' item(s) will be removed and it cannot be undone. Proceed?'})
-            .subscribe(confirmed => {
-                if (!confirmed) return;
-                let items = this.dataTable.selectedRows.map(x => x.item);
-                this.dataTable.selectedRows = [];
-                this.dataService.remove(items)
-                    .then(() => {
-                        this.showSuccess('The selected item(s) are removed successfully!');
+                .subscribe(confirmed => {
+                    if (!confirmed) return;
+                    let items = this.dataTable.selectedRows.map(x => x.item);
+                    this.dataTable.selectedRows = [];
+                    this.dataService.remove(items)
+                        .then(() => {
+                            this.showSuccess('The selected item(s) are removed successfully!');
+                        });
                     });
-                });
     }
 
     private initializeItemLimit() {

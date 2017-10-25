@@ -1,3 +1,5 @@
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { TabControlService } from '../tab-control.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Song, SongInDb } from '../../models/song';
@@ -40,7 +42,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private songService: SongsService,
-              private tabService: TabControlService) {
+              private tabService: TabControlService,
+              private dialogService: DialogService) {
 
     this.songId = this.route.snapshot.paramMap.get('id');
     this.song = new Song(new SongInDb());
@@ -106,7 +109,18 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   navigateBack() {
-    this.router.navigateByUrl('/songs');
+    if (this.isModified()) {
+      this.dialogService.addDialog(ConfirmDialogComponent, {
+        title: 'Discard Changes',
+        message: 'Changes have been made. Discard?'})
+          .subscribe(confirmed => {
+            if (!confirmed) return;
+            this.song = Object.assign({}, this.original);
+            this.router.navigateByUrl('/songs');
+          });
+    } else {
+      this.router.navigateByUrl('/songs');
+    }
   }
 
   addNewSong() {

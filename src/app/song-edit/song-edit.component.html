@@ -2,6 +2,11 @@
   <div *ngIf="!song.removed;then edit else showError"></div>
   <ng-template #edit>
     <div class="d-flex flex-column h-100">
+      <div class="pb-2">
+        <button class="btn btn-default" (click)="navigateBack()">&#8249;&#8249; Back</button>
+        <button class="btn btn-default" (click)="saveChanges()" *ngIf="!addNew" [disabled]="!isModified()">Save Changes</button>
+        <button class="btn btn-default" (click)="addNewSong()"  *ngIf="addNew"  [disabled]="!isModified()">Add Song</button>
+      </div>
       <div *ngIf="!song.removed; else showError">
         <form class="d-flex flex-wrap">
           <div class="form-group px-1" *ngFor="let field of editFields" [ngStyle]="field.style">
@@ -25,11 +30,6 @@
               [(ngModel)]="song.lyrics" (scroll)="onScroll($event)"></textarea>
           </div>
         </form>
-        <div class="d-flex flex-column justify-content-end px-1">
-          <button class="btn btn-default mt-2" (click)="saveChanges()" *ngIf="!addNew" [disabled]="!isModified()">Save changes</button>
-          <button class="btn btn-default mt-2" (click)="addNewSong()"  *ngIf="addNew"  [disabled]="!isModified()">Add Song</button>
-          <button class="btn btn-default mt-2" (click)="navigateBack()">Cancel / Back</button>
-        </div>
       </div>
     </div>
   </ng-template>

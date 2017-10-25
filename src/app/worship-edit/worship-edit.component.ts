@@ -1,9 +1,12 @@
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'ng2-bootstrap-modal/dist';
+import { ToastsManager } from 'ng2-toastr';
 import { WorshipsService } from '../worships.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Worship, WorshipInDb } from '../../models/worship';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TabControlService } from '../tab-control.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
 @Component({
   selector: 'app-worship-edit',
@@ -22,7 +25,13 @@ export class WorshipEditComponent implements OnInit {
 
   constructor(private tabService: TabControlService,
               private route: ActivatedRoute,
-              private worshipService: WorshipsService) {
+              private worshipService: WorshipsService,
+              private router: Router,
+              private vcr: ViewContainerRef,
+              private toastr: ToastsManager,
+              private dialogService: DialogService) {
+
+    this.toastr.setRootViewContainerRef(this.vcr);
     this.worshipId = this.route.snapshot.paramMap.get('id');
     this.worship = new Worship(new WorshipInDb());
     this.original = Object.assign({}, this.worship);
@@ -56,4 +65,38 @@ export class WorshipEditComponent implements OnInit {
     }
   }
 
+  showSuccess(message: string) {
+    this.toastr.success(message, 'Success!', {
+        showCloseButton: true,
+    });
+  }
+
+  isModified() {
+    if (!(this.original.name === this.worship.name))
+      return true;
+
+    return false;
+  }
+
+  saveChanges() {
+    this.worshipService.update(this.worship)
+      .then(() => {
+        this.showSuccess('Changes saved successfully.');
+      });
+  }
+
+  navigateBack() {
+    if (this.isModified()) {
+      this.dialogService.addDialog(ConfirmDialogComponent, {
+        title: 'Discard Changes',
+        message: 'Changes have been made. Discard?'})
+          .subscribe(confirmed => {
+            if (!confirmed) return;
+            this.worship = Object.assign({}, this.original);
+            this.router.navigateByUrl('/worship');
+          });
+    } else {
+      this.router.navigateByUrl('/worship');
+    }
+  }
 }

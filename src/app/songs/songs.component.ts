@@ -1,4 +1,4 @@
-import { TabDisplayService } from '../tab-display.service';
+import { TabControlService } from '../tab-control.service';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
@@ -26,8 +26,6 @@ class Filters {
 })
 export class SongsComponent extends ComponentWithDataTable<Song> implements OnInit {
 
-  tabSelected: string = 'songs';
-  defaultTabDisplay = 'Songs';
   filters: Filters = new Filters();
   dataColumns : DataColumn[] = [
     new DataColumn('title',         'Title',   true),
@@ -43,7 +41,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
     songService: SongsService,
     private router: Router,
     private route: ActivatedRoute,
-    private tabService: TabDisplayService,
+    private tabService: TabControlService,
     vcr: ViewContainerRef,
     toastr: ToastsManager,
     dialogService: DialogService) {
@@ -51,6 +49,15 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
       super(vcr, toastr, dialogService);
       this.dataService = songService;
     }
+
+  updateTab() {
+    this.tabService.updateTab({
+      id: 'songs',
+      isActive: true,
+      display: 'Songs',
+      link: 'songs'
+    });
+  }
 
   ngOnInit() {
     this.dataService.find().subscribe((songs: Song[]) => {

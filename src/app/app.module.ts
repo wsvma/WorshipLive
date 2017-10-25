@@ -1,4 +1,5 @@
-import { TabDisplayService } from './tab-display.service';
+import { MyRouterOutlet } from './my-router-outlet';
+import { TabControlService } from './tab-control.service';
 import { WorshipsServiceProvider } from './worships.service.provider';
 import { SongsServiceProvider } from './songs.service.provider';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
@@ -51,6 +52,7 @@ const ROUTES = [
     SongEditComponent,
     ConfirmDialogComponent,
     WorshipEditComponent,
+    MyRouterOutlet,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +67,7 @@ const ROUTES = [
   providers: [
     SongsServiceProvider,
     WorshipsServiceProvider,
-    TabDisplayService,
+    TabControlService,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],

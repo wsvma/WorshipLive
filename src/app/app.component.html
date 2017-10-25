@@ -1,13 +1,10 @@
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100" *ngIf="tabs">
   <ul class="nav nav-tabs" style="flex: 0 0 auto">
-    <li class="nav-item">
-      <a #worship class="nav-link" id="worship" routerLink="worship" [ngClass]="{active: tabSelected === 'worship'}" (click)="onTabSelected(worship)">Worship</a>
-    </li>
-    <li class="nav-item">
-      <a #songs class="nav-link" id="songs" routerLink="songs" [ngClass]="{active: tabSelected === 'songs'}" (click)="onTabSelected(songs)">Songs</a>
+    <li class="nav-item" *ngFor="let tab of tabs">
+      <a #worship class="nav-link" [routerLink]="tab.link" [ngClass]="{active: tab.isActive}">{{ tab.display }}</a>
     </li>
   </ul>
   <div class="flex-1 router-outlet-container">
-    <router-outlet (activate)="outletActivated($event)"></router-outlet>
+    <my-router-outlet (attached)="onComponentAttached($event)" (activate)="onComponentActivated($event)"></my-router-outlet>
   </div>
 </div>

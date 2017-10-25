@@ -1,4 +1,4 @@
-import { TabDisplayService } from './tab-display.service';
+import { Tab, TabControlService } from './tab-control.service';
 import { WorshipComponent } from './worship/worship.component';
 import { SongsComponent } from './songs/songs.component';
 import { Component, OnInit } from '@angular/core';
@@ -10,26 +10,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  tabSelected = 'worship';
-  activeTab: any;
+  tabs: Tab[];
 
-  constructor(private tabDisplayService: TabDisplayService) {}
+  constructor(private tabControlService: TabControlService) {
+    this.tabs = this.tabControlService.latest;
+  }
 
   ngOnInit() {
-    this.tabDisplayService.latestTabDisplay.subscribe(newDisplay => {
-      if (this.activeTab)
-        this.activeTab.text = newDisplay;
-    })
+    this.tabControlService.tabs.subscribe(tabs => {
+      this.tabs = tabs;
+    });
   }
 
-  onTabSelected(tab) {
-    this.tabSelected = tab.id;
-    this.activeTab = tab;
+  onComponentAttached($event) {
+    $event.component.updateTab();
   }
 
-  outletActivated($event) {
-    this.tabSelected = $event.tabSelected;
-    this.activeTab = document.querySelector('#' + this.tabSelected);
-    this.activeTab.text = $event.defaultTabDisplay;
+  onComponentActivated($event) {
+    $event.updateTab();
   }
 }

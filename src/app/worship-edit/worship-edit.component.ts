@@ -2,7 +2,7 @@ import { WorshipsService } from '../worships.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Worship, WorshipInDb } from '../../models/worship';
 import { ActivatedRoute } from '@angular/router';
-import { TabDisplayService } from '../tab-display.service';
+import { TabControlService } from '../tab-control.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -20,7 +20,7 @@ export class WorshipEditComponent implements OnInit {
   subscription : Subscription;
   errorMessage : string = "The worship is no longer in database. Someone removed it just now.";
 
-  constructor(private tabService: TabDisplayService,
+  constructor(private tabService: TabControlService,
               private route: ActivatedRoute,
               private worshipService: WorshipsService) {
     this.worshipId = this.route.snapshot.paramMap.get('id');
@@ -29,24 +29,22 @@ export class WorshipEditComponent implements OnInit {
     this.addNew = (this.worshipId === 'new');
   }
 
-  get tabDisplay() {
-    if (this.worship.name)
-      return 'Worship (' + this.worship.name + ')';
-    return 'Worship (New)';
-  }
-
-  onKeyUp($event: KeyboardEvent) {
-    this.tabService.pushNewDisplay(this.tabDisplay);
+  updateTab() {
+    this.tabService.updateTab({
+      id: 'worship',
+      isActive: true,
+      display: 'Worship (' + this.worship.name + ')',
+      link: 'worship/' + this.worshipId
+    });
   }
 
   ngOnInit() {
-    this.tabService.pushNewDisplay('Worship');
     if (!this.addNew) {
       let observer : Observer<Worship> = {
         next: (worship) => {
           this.worship = worship;
           this.original = Object.assign({}, worship);
-          this.tabService.pushNewDisplay(this.tabDisplay);
+          this.updateTab();
         },
         error: (err) => {
           this.worship = null;

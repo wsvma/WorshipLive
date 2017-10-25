@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { TabDisplayService } from '../tab-display.service';
+import { TabControlService } from '../tab-control.service';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ToastsManager } from 'ng2-toastr';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
@@ -16,7 +16,6 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 })
 export class WorshipComponent extends ComponentWithDataTable<Worship> implements OnInit {
 
-  tabSelected = 'worship';
   dataColumns : DataColumn[] = [
     new DataColumn('name',         'Name',   true),
     new DataColumn('date_created',  'Date Created', true),
@@ -24,7 +23,7 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
   ];
 
   constructor(private worshipService: WorshipsService,
-              private tabService: TabDisplayService,
+              private tabService: TabControlService,
               private router: Router,
               vcr: ViewContainerRef,
               toastr: ToastsManager,
@@ -35,11 +34,19 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
   }
 
   ngOnInit() {
-    this.tabService.pushNewDisplay('Worship');
     this.dataService.find().subscribe((worships: Worship[]) => {
       this.data = worships;
       this.initializeDataTable(worships);
     })
+  }
+
+  updateTab() {
+    this.tabService.updateTab({
+      id: 'worship',
+      display: 'Worship',
+      isActive: true,
+      link: 'worship'
+    });
   }
 
   worshipDoubleClicked(event) {

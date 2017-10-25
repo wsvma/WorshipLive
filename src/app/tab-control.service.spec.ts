@@ -1,5 +1,4 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { TabControlService } from './tab-control.service';
 
 describe('TabDisplayService', () => {

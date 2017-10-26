@@ -57,4 +57,12 @@ export class Song extends SongInDb implements DbObj {
         else
             this.numwords = countWord(this.title_1);
     }
+
+    isEqual(song : Song) {
+        return JSON.stringify(this) == JSON.stringify(song);
+    }
+
+    getClone() {
+        return new Song(this.toBaseFormat);
+    }
 }

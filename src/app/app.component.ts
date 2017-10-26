@@ -23,10 +23,6 @@ export class AppComponent implements OnInit {
   }
 
   onComponentAttached($event) {
-    $event.component.onAttached();
-  }
-
-  onComponentActivated($event) {
     $event.onAttached();
   }
 }

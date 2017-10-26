@@ -23,8 +23,17 @@ export class Worship extends WorshipInDb implements DbObj {
         let worshipInDb: WorshipInDb = new WorshipInDb();
         for (let prop in worshipInDb)
             worshipInDb[prop] = this[prop];
+        worshipInDb.itemsInDb = [];
         for (let i = 0; i < this.items.length; i++)
             worshipInDb.itemsInDb[i] = this.items[i].toBaseFormat;
         return worshipInDb;
+    }
+
+    isEqual(worship : Worship) {
+        return JSON.stringify(this) == JSON.stringify(worship);
+    }
+
+    getClone() {
+        return new Worship(this.toBaseFormat);
     }
 }

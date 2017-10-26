@@ -100,6 +100,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
     if (this.worship) {
       for (let x of this.dataTable.selectedRows)
         this.worship.items.push(x.item);
+      this.showSuccess('Added to worship (' + this.state.activeWorship.snapshot.name + ') successfully.');
     }
   }
 

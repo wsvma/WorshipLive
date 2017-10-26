@@ -1,3 +1,8 @@
-:host /deep/ .data-table .data-table-row.selected {
+.table-hover > tbody > tr.selectedRow:hover > td,
+.selectedRow > td {
     background-color: #E4EDF9;
+}
+
+tr {
+    height: 3em;
 }

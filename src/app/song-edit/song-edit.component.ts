@@ -78,8 +78,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
     if (!this.addNew) {
       let observer : Observer<Song> = {
         next: (song) => {
-          this.song = song;
-          this.original = Object.assign({}, song);
+          this.song = song.getClone();
+          this.original = song.getClone();
           this.updateTab();
         },
         error: (err) => {
@@ -98,13 +98,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   isModified() {
-    let fieldsToCompare = this.editFields.map(f => f.name);
-    fieldsToCompare.push('lyrics');
-    for (let field of fieldsToCompare) {
-      if (!(this.original[field] === this.song[field]))
-        return true;
-    }
-    return false;
+    return !this.song.isEqual(this.original);
   }
 
   onScroll($event) {
@@ -120,7 +114,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
         message: 'Changes have been made. Discard?'})
           .subscribe(confirmed => {
             if (!confirmed) return;
-            this.song = Object.assign({}, this.original);
+            this.song = this.original.getClone();
             this.router.navigateByUrl('/songs');
           });
     } else {

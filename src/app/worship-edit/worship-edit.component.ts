@@ -19,6 +19,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 export class WorshipEditComponent extends ComponentWithDataTable<Song> implements OnInit {
 
   tabSelected = 'worship';
+  selectedRow = -1;
   worshipId : string;
   worship : Worship;
   original : Worship;
@@ -53,7 +54,13 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   reloadWorshipFromDb() {
     if (!this.addNew) {
       let observer : Observer<Worship> = {
-        next: (worship) => { this.state.activeWorship.update(worship); },
+        next: (worship) => {
+          if (this.worship && this.worship._id != '') {
+            this.showSuccess('Worship updated.');
+          }
+          this.original = worship.getClone();
+          this.state.activeWorship.update(worship.getClone());
+        },
         error: (err) => {
           this.worship = null;
           this.errorMessage = err.message;
@@ -72,33 +79,56 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     this.state.activeWorship.getObservable().subscribe(worship => {
         this.worship = worship;
         if (worship) {
-          this.data = worship.items;
-          this.original = Object.assign({}, worship);
           this.updateTab();
-          this.initializeDataTable(worship.items);
-        } else {
-          this.data = [];
         }
       });
     this.reloadWorshipFromDb();
   }
 
   isModified() {
-    if (!(this.original.name === this.worship.name))
-      return true;
+    return !this.worship.isEqual(this.original);
+  }
 
-    return false;
+  onRowSelected(index) {
+    if (index == this.selectedRow)
+      this.selectedRow = -1;
+    else
+      this.selectedRow = index;
+  }
+
+  removeItem(index) {
+    if (this.worship) {
+      this.worship.items.splice(index, 1);
+    }
+  }
+
+  swapElement(a, b) {
+    let x = this.worship.items[a];
+    this.worship.items[a] = this.worship.items[b];
+    this.worship.items[b] = x;
+  }
+
+  moveItemUp(index) {
+    if (this.worship && index > 0) {
+      this.swapElement(index-1, index);
+    }
+  }
+
+  moveItemDown(index) {
+    if (this.worship && index < this.worship.items.length-1) {
+      this.swapElement(index+1, index);
+    }
   }
 
   saveChanges() {
-    this.worshipService.update(this.worship)
-      .then(() => {
-        this.showSuccess('Changes saved successfully.');
-      });
+    this.worshipService.update(this.worship);
   }
 
   onAttached() {
-    this.reloadWorshipFromDb();
+    if (!this.state.activeWorship.snapshot)
+      this.reloadWorshipFromDb();
+    else
+      this.updateTab();
   }
 
   navigateBack() {

@@ -1,3 +1,6 @@
+import { Song } from '../../models/song';
+import { SharedStateService } from '../shared-state.service';
+import { ComponentWithDataTable } from '../component-with-dtable';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ToastsManager } from 'ng2-toastr';
@@ -13,7 +16,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
   templateUrl: './worship-edit.component.html',
   styleUrls: ['./worship-edit.component.css']
 })
-export class WorshipEditComponent implements OnInit {
+export class WorshipEditComponent extends ComponentWithDataTable<Song> implements OnInit {
 
   tabSelected = 'worship';
   worshipId : string;
@@ -27,12 +30,12 @@ export class WorshipEditComponent implements OnInit {
               private route: ActivatedRoute,
               private worshipService: WorshipsService,
               private router: Router,
-              private vcr: ViewContainerRef,
-              private toastr: ToastsManager,
-              private dialogService: DialogService) {
+              public  state: SharedStateService,
+              vcr: ViewContainerRef,
+              toastr: ToastsManager,
+              dialogService: DialogService) {
 
-    this.toastr.setRootViewContainerRef(this.vcr);
-    this.worshipId = this.route.snapshot.paramMap.get('id');
+    super(vcr, toastr, dialogService);
     this.worship = new Worship(new WorshipInDb());
     this.original = Object.assign({}, this.worship);
     this.addNew = (this.worshipId === 'new');
@@ -47,28 +50,37 @@ export class WorshipEditComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  reloadWorshipFromDb() {
     if (!this.addNew) {
       let observer : Observer<Worship> = {
-        next: (worship) => {
-          this.worship = worship;
-          this.original = Object.assign({}, worship);
-          this.updateTab();
-        },
+        next: (worship) => { this.state.activeWorship.update(worship); },
         error: (err) => {
           this.worship = null;
           this.errorMessage = err.message;
         },
         complete: () => {}
       }
+      if (this.subscription)
+        this.subscription.unsubscribe();
+
+      this.worshipId = this.route.snapshot.paramMap.get('id');
       this.subscription = this.worshipService.get(this.worshipId).subscribe(observer);
     }
   }
 
-  showSuccess(message: string) {
-    this.toastr.success(message, 'Success!', {
-        showCloseButton: true,
-    });
+  ngOnInit() {
+    this.state.activeWorship.getObservable().subscribe(worship => {
+        this.worship = worship;
+        if (worship) {
+          this.data = worship.items;
+          this.original = Object.assign({}, worship);
+          this.updateTab();
+          this.initializeDataTable(worship.items);
+        } else {
+          this.data = [];
+        }
+      });
+    this.reloadWorshipFromDb();
   }
 
   isModified() {
@@ -85,6 +97,10 @@ export class WorshipEditComponent implements OnInit {
       });
   }
 
+  onAttached() {
+    this.reloadWorshipFromDb();
+  }
+
   navigateBack() {
     if (this.isModified()) {
       this.dialogService.addDialog(ConfirmDialogComponent, {
@@ -92,10 +108,11 @@ export class WorshipEditComponent implements OnInit {
         message: 'Changes have been made. Discard?'})
           .subscribe(confirmed => {
             if (!confirmed) return;
-            this.worship = Object.assign({}, this.original);
+            this.state.activeWorship.update(null);
             this.router.navigateByUrl('/worship');
           });
     } else {
+      this.state.activeWorship.update(null);
       this.router.navigateByUrl('/worship');
     }
   }

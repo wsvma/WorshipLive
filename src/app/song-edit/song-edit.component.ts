@@ -1,3 +1,4 @@
+import { SharedStateService } from '../shared-state.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { TabControlService } from '../tab-control.service';
@@ -49,6 +50,10 @@ export class SongEditComponent implements OnInit, OnDestroy {
     this.song = new Song(new SongInDb());
     this.original = Object.assign({}, this.song);
     this.addNew = (this.songId === 'new');
+  }
+
+  onAttached() {
+    this.updateTab();
   }
 
   get tabDisplay() {

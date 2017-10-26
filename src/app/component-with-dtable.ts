@@ -23,12 +23,13 @@ export class ComponentWithDataTable<DataType> {
     items: DataType[] = [];
     itemCount = 0;
     itemLimit = 10;
+    itemLimitInited = false;
     dataTableResource : DataTableResource<DataType>;
     dataColumns : DataColumn[];
 
     @ViewChild(DataTable) dataTable;
 
-    constructor(private vcr: ViewContainerRef, public toastr: ToastsManager, private dialogService: DialogService) {
+    constructor(private vcr: ViewContainerRef, public toastr: ToastsManager, protected dialogService: DialogService) {
         this.toastr.setRootViewContainerRef(this.vcr);
     }
 
@@ -42,8 +43,8 @@ export class ComponentWithDataTable<DataType> {
 
         this.dataTableResource.query(params)
             .then(items => {
-            this.items = items;
-            return this.dataTableResource.count();
+                this.items = items;
+                return this.dataTableResource.count();
             })
             .then(count => this.itemCount = count);
     }
@@ -61,8 +62,8 @@ export class ComponentWithDataTable<DataType> {
             newPage = Math.min(newPage, this.dataTable.lastPage);
             newPage = Math.max(newPage, 1);
             if (newPage != this.dataTable.page) {
-            this.dataTable.selectedRows = [];
-            this.dataTable.page = newPage;
+                this.dataTable.selectedRows = [];
+                this.dataTable.page = newPage;
             }
         }
     }
@@ -82,11 +83,12 @@ export class ComponentWithDataTable<DataType> {
                     });
     }
 
-    private initializeItemLimit() {
-        if (document.querySelector('data-table')) {
+    protected initializeItemLimit() {
+        if (document.querySelector('data-table') && !this.itemLimitInited) {
             let availableHeight = document.querySelector('data-table').parentElement.clientHeight;
             let rowHeight = document.querySelector('tr').clientHeight;
             this.itemLimit = Math.floor(availableHeight / rowHeight) - 3;
+            this.itemLimitInited = true;
         }
     }
 

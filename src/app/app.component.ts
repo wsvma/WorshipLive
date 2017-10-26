@@ -23,10 +23,10 @@ export class AppComponent implements OnInit {
   }
 
   onComponentAttached($event) {
-    $event.component.updateTab();
+    $event.component.onAttached();
   }
 
   onComponentActivated($event) {
-    $event.updateTab();
+    $event.onAttached();
   }
 }

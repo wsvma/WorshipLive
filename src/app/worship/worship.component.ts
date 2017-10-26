@@ -40,6 +40,10 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
     })
   }
 
+  onAttached() {
+    this.updateTab();
+  }
+
   updateTab() {
     this.tabService.updateTab({
       id: 'worship',

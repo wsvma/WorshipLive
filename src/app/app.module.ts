@@ -1,3 +1,4 @@
+import { SharedStateService } from './shared-state.service';
 import { MyRouterOutlet } from './my-router-outlet';
 import { TabControlService } from './tab-control.service';
 import { WorshipsServiceProvider } from './worships.service.provider';
@@ -68,6 +69,7 @@ const ROUTES = [
     SongsServiceProvider,
     WorshipsServiceProvider,
     TabControlService,
+    SharedStateService,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
   ],
   bootstrap: [AppComponent],

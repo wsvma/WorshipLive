@@ -1,3 +1,4 @@
+import { SharedStateService } from '../shared-state.service';
 import { TabControlService } from '../tab-control.service';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -42,6 +43,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
     private router: Router,
     private route: ActivatedRoute,
     private tabService: TabControlService,
+    private state: SharedStateService,
     vcr: ViewContainerRef,
     toastr: ToastsManager,
     dialogService: DialogService) {
@@ -49,6 +51,10 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
       super(vcr, toastr, dialogService);
       this.dataService = songService;
     }
+
+  onAttached() {
+    this.updateTab();
+  }
 
   updateTab() {
     this.tabService.updateTab({
@@ -80,6 +86,21 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
     let song = event.row.item;
     this.dataTable.selectedRows = [];
     this.router.navigateByUrl('/songs/' + song._id);
+  }
+
+  get worship() {
+    return this.state.activeWorship.snapshot;
+  }
+
+  set worship(worship) {
+    this.state.activeWorship.update(worship);
+  }
+
+  addToWorship() {
+    if (this.worship) {
+      for (let x of this.dataTable.selectedRows)
+        this.worship.items.push(x.item);
+    }
   }
 
   filterSongs() {

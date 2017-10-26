@@ -2,10 +2,6 @@
     background-color: #E4EDF9;
 }
 
-:host /deep/ .data-table .data-table-row {
-    height: 20px;
-}
-
 .filter {
     padding-right: 10px;
     padding-bottom: 10px;

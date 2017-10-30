@@ -12,7 +12,7 @@ export interface Tab {
 export class TabControlService {
 
   tabs: Subject<Tab[]>;
-  latest: Tab[] = [
+  snapshot: Tab[] = [
     {
       id: 'worship',
       display: 'Worship',
@@ -29,18 +29,18 @@ export class TabControlService {
 
   constructor() {
     this.tabs = new Subject<Tab[]>();
-    this.tabs.next(this.latest);
+    this.tabs.next(this.snapshot);
   }
 
   updateTab(tab: Tab) {
-    for (let i = 0; i < this.latest.length; i++) {
-      if (this.latest[i].id === tab.id) {
+    for (let i = 0; i < this.snapshot.length; i++) {
+      if (this.snapshot[i].id === tab.id) {
         if (tab.isActive) {
-          for (let j = 0; j < this.latest.length; j++)
-            this.latest[j].isActive = false;
+          for (let j = 0; j < this.snapshot.length; j++)
+            this.snapshot[j].isActive = false;
         }
-        this.latest[i] = tab;
-        this.tabs.next(this.latest);
+        this.snapshot[i] = tab;
+        this.tabs.next(this.snapshot);
         break;
       }
     }

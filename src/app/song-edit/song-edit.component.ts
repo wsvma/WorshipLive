@@ -80,6 +80,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
         next: (song) => {
           this.song = song.getClone();
           this.original = song.getClone();
+          //this.song.getPages();
           this.updateTab();
         },
         error: (err) => {

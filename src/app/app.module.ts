@@ -20,6 +20,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorshipEditComponent } from './worship-edit/worship-edit.component';
+import { WorshipViewerComponent } from './worship-viewer/worship-viewer.component';
 
 const ROUTES = [
   {
@@ -54,6 +55,7 @@ const ROUTES = [
     ConfirmDialogComponent,
     WorshipEditComponent,
     MyRouterOutlet,
+    WorshipViewerComponent,
   ],
   imports: [
     BrowserModule,

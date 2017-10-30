@@ -11,7 +11,7 @@ import { Song } from '../../models/song';
 import { DataTableResource, DataTable } from 'angular-4-data-table';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
-import * as fuzzy from 'fuzzy';
+import FuzzySearch from 'fuzzy-search';
 import * as rangeParser from 'parse-numeric-range';
 
 class Filters {
@@ -114,15 +114,15 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
       });
     }
 
-    if (this.filters.title)
-      filteredSongs = filteredSongs.filter(s => {
-        return fuzzy.filter(this.filters.title, [s.title_1, s.title_2]).length > 0;
-      });
+    if (this.filters.title) {
+      filteredSongs = new FuzzySearch(filteredSongs, ['title_1', 'title_2'], { sort: true} ).search(this.filters.title);
+      this.dataTable.sortBy = '';
+    }
 
-    if (this.filters.lyrics)
-      filteredSongs = filteredSongs.filter(s => {
-        return fuzzy.filter(this.filters.lyrics, [s.lyrics]).length > 0;
-      });
+    if (this.filters.lyrics) {
+      filteredSongs = new FuzzySearch(filteredSongs, ['lyrics_1', 'lyrics_2'], {sort: true} ).search(this.filters.lyrics);
+      this.dataTable.sortBy = '';
+    }
 
     this.initializeDataTable(filteredSongs);
   }

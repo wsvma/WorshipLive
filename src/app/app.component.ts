@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   tabs: Tab[];
 
   constructor(private tabControlService: TabControlService) {
-    this.tabs = this.tabControlService.latest;
+    this.tabs = this.tabControlService.snapshot;
   }
 
   ngOnInit() {

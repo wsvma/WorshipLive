@@ -16,18 +16,25 @@
         </form>
       </div>
       <div class="d-flex flex-1 flex-wrap">
+        <form style="width:7em">
+          <div class="form-group d-flex flex-column h-100 px-1">
+            <label for="tags">Tags</label>
+            <textarea readonly class="form-control flex-1" id="tags" name="tags"
+              [(ngModel)]="song.tags"></textarea>
+          </div>
+        </form>
         <form class="flex-1">
           <div class="form-group d-flex flex-column h-100 px-1">
             <label for="lyrics1">Lyrics (Region 1)</label>
             <textarea class="form-control flex-1" id="lyrics1" name="lyrics1"
-              [(ngModel)]="song.lyrics" (scroll)="onScroll($event)"></textarea>
+              [(ngModel)]="song.lyrics_1" (scroll)="onScroll($event)"></textarea>
           </div>
         </form>
         <form class="flex-1">
           <div class="form-group d-flex flex-column h-100 px-1">
             <label for="lyrics2">Lyrics (Region 2)</label>
             <textarea class="form-control flex-1" id="lyrics2" name="lyrics2"
-              [(ngModel)]="song.lyrics" (scroll)="onScroll($event)"></textarea>
+              [(ngModel)]="song.lyrics_2" (scroll)="onScroll($event)"></textarea>
           </div>
         </form>
       </div>

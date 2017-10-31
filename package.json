@@ -23,6 +23,7 @@
     "@angular/router": "^4.2.4",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
     "angular-4-data-table": "^0.2.3",
+    "angular-sortablejs": "^2.1.0",
     "bootstrap": "^4.0.0-beta",
     "core-js": "^2.4.1",
     "feathers-client": "^2.4.0",
@@ -35,6 +36,7 @@
     "popper.js": "^1.12.5",
     "rxjs": "^5.4.2",
     "socket.io-client": "^2.0.3",
+    "sortablejs": "^1.6.1",
     "wordcount": "^1.1.1",
     "zone.js": "^0.8.14"
   },

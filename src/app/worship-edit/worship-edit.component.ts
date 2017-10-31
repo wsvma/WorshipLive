@@ -19,7 +19,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 export class WorshipEditComponent extends ComponentWithDataTable<Song> implements OnInit {
 
   tabSelected = 'worship';
-  selectedRow = -1;
+  selectedItem = null;
   worshipId : string;
   worship : Worship;
   original : Worship;
@@ -89,34 +89,17 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     return !this.worship.isEqual(this.original);
   }
 
-  onRowSelected(index) {
-    if (index == this.selectedRow)
-      this.selectedRow = -1;
+  onRowSelected(item) {
+    if (item == this.selectedItem)
+      this.selectedItem = null;
     else
-      this.selectedRow = index;
+      this.selectedItem = item;
+    console.log('onRowSelected');
   }
 
   removeItem(index) {
     if (this.worship) {
       this.worship.items.splice(index, 1);
-    }
-  }
-
-  swapElement(a, b) {
-    let x = this.worship.items[a];
-    this.worship.items[a] = this.worship.items[b];
-    this.worship.items[b] = x;
-  }
-
-  moveItemUp(index) {
-    if (this.worship && index > 0) {
-      this.swapElement(index-1, index);
-    }
-  }
-
-  moveItemDown(index) {
-    if (this.worship && index < this.worship.items.length-1) {
-      this.swapElement(index+1, index);
     }
   }
 

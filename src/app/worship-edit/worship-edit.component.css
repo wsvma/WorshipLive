@@ -1,8 +1,23 @@
-.table-hover > tbody > tr.selectedRow:hover > td,
-.selectedRow > td {
-    background-color: #E4EDF9;
+.list-group-hover .list-group-item:hover {
+    background-color: #f0f0f0;
+    cursor: grab;
 }
 
-tr {
-    height: 3em;
+.list-group-item > button {
+    border: none;
+    background-color: rgba(255,255,255,0);
+    float: right;
+}
+
+.list-group-item > button:hover {
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 0, 0, 1);
+    background-color: rgba(255,255,255,0);
+    float: right;
+}
+
+.list-group-hover .list-group-item.active:hover,
+.list-group-item.active {
+    background-color: #007bff;
 }

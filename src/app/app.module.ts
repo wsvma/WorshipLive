@@ -11,6 +11,7 @@ import { DataTableModule } from 'angular-4-data-table';
 import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SortablejsModule } from 'angular-sortablejs';
 
 import { AppComponent } from './app.component';
 import { SongsComponent } from './songs/songs.component';
@@ -58,6 +59,7 @@ const ROUTES = [
     WorshipViewerComponent,
   ],
   imports: [
+    SortablejsModule,
     BrowserModule,
     FormsModule,
     DataTableModule,

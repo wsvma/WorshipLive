@@ -16,12 +16,21 @@
         </form>
       </div>
       <div class="d-flex flex-1 flex-wrap">
-        <form style="width:7em">
-          <div class="form-group d-flex flex-column h-100 px-1">
-            <label for="tags">Tags</label>
-            <textarea readonly class="form-control flex-1" id="tags" name="tags"
-              [(ngModel)]="song.tags"></textarea>
-          </div>
+        <form class="h-100 px-1" style="width:10em">
+          <label for="tags">Segments</label>
+          <ul class="list-group mb-3">
+            <li class="list-group-item py-0 pr-1 tag" *ngFor="let tag of song.tags">
+              {{ tag }}
+              <button class="addBtn" (click)="addTagToSequences(tag)">+</button>
+            </li>
+          </ul>
+          <label for="sequence">Order</label>
+          <ul class="form-group list-group" [sortablejs]="song.order">
+            <li class="list-group-item py-0 pr-1 sequences" *ngFor="let tag of song.order; let i = index">
+              {{ tag }}
+              <button class="removeBtn" (click)="removeSequence(i)">x</button>
+            </li>
+          </ul>
         </form>
         <form class="flex-1">
           <div class="form-group d-flex flex-column h-100 px-1">

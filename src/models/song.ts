@@ -11,6 +11,7 @@ export class SongInDb extends DbObjBase {
     lyrics_1: string = '';
     lyrics_2: string = '';
     sequence: string = '';
+    order: string[] = [];
     key: string = '';
     category: string = '';
     numwords: number = 0;
@@ -33,7 +34,11 @@ export class Song extends SongInDb implements DbObj {
 
     constructor(songInDb: SongInDb) {
         super();
-        Object.assign(this, songInDb);
+        for (let prop in songInDb)
+            if (Array.isArray(songInDb[prop]))
+                this[prop] = songInDb[prop].slice();
+            else
+                this[prop] = songInDb[prop];
     }
 
     get title() : string {
@@ -52,7 +57,10 @@ export class Song extends SongInDb implements DbObj {
         let songInDb: SongInDb = new SongInDb();
         this.countWordsInTitle();
         for (let prop in songInDb)
-            songInDb[prop] = this[prop];
+            if (Array.isArray(songInDb[prop]))
+                songInDb[prop] = this[prop].slice();
+            else
+                songInDb[prop] = this[prop];
         return songInDb;
     }
 
@@ -89,6 +97,6 @@ export class Song extends SongInDb implements DbObj {
 
     get tags() {
         let segments = this.getSegments(this.lyrics_1);
-        return segments.map(s => s.name).join('\n');
+        return segments.map(s => s.name);
     }
 }

@@ -1,0 +1,29 @@
+.tags {
+    cursor: pointer;
+}
+
+.sequences {
+    cursor: grab;
+}
+
+.removeBtn, .addBtn {
+    border: none;
+    outline: none;
+    padding-right: 1em;
+    cursor: pointer;
+    color: rgba(255, 0, 0, 0.4);
+    background-color: rgba(255,255,255,0);
+    float: right;
+}
+
+.addBtn {
+    color: rgba(0, 255, 0, 0.4);
+}
+
+.addBtn:hover {
+    color: rgba(0, 255, 0, 1);
+}
+
+.removeBtn:hover {
+    color: rgba(255, 0, 0, 1);
+}

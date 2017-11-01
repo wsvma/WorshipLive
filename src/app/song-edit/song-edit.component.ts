@@ -21,6 +21,7 @@ interface EditField {
 })
 export class SongEditComponent implements OnInit, OnDestroy {
 
+  selectedTag : string = '';
   addNew : boolean = false;
   songId : string;
   song : Song;
@@ -38,6 +39,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
     { name: 'timing'        , label: 'Timing'       , style: { width: '16%' } },
     { name: 'copyright'     , label: 'Copyright'    , style: { width: '30%' } },
     { name: 'license_admin1', label: 'License Admin', style: { width: '30%' } },
+
   ];
 
   constructor(private route: ActivatedRoute,
@@ -80,7 +82,6 @@ export class SongEditComponent implements OnInit, OnDestroy {
         next: (song) => {
           this.song = song.getClone();
           this.original = song.getClone();
-          //this.song.getPages();
           this.updateTab();
         },
         error: (err) => {
@@ -100,6 +101,25 @@ export class SongEditComponent implements OnInit, OnDestroy {
 
   isModified() {
     return !this.song.isEqual(this.original);
+  }
+
+  onTagSelected(tag) {
+    if (this.selectedTag == tag) {
+      this.selectedTag = '';
+    } else {
+      this.selectedTag = tag;
+    }
+    console.log(tag, this.selectedTag);
+  }
+
+  removeSequence(index) {
+    this.song.order.splice(index, 1);
+  }
+
+  addTagToSequences(tag) {
+    this.song.order.push(tag);
+    console.log(JSON.stringify(this.song));
+    console.log(JSON.stringify(this.original));
   }
 
   onScroll($event) {

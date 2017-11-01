@@ -10,23 +10,11 @@
       <div class="px-2" *ngIf="worship">
         <label>Items</label>
         <ol class="list-group list-group-hover" [sortablejs]="worship.items">
-          <li class="list-group-item" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(song)" [ngClass]="{active:song==selectedItem}">
+          <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(song)" [ngClass]="{active:song==selectedItem}">
             {{ song.title }}
             <button (click)="removeItem(i)">X</button>
           </li>
         </ol>
-        <!--table class="table table-striped table-hover">
-          <tbody>
-            <tr *ngFor="let song of worship.items; let i = index" class="d-flex justify-content-end" [ngClass]="{selectedRow:i==selectedRow}">
-              <td class="flex-1" (click)="onRowSelected(i)">{{ song.title }}</td>
-              <td class="pr-2">
-                <button class="m-0 px-1 border-0" (click)="moveItemUp(i)">&uarr;</button>
-                <button class="m-0 px-1 border-0" (click)="moveItemDown(i)">&darr;</button>
-                <button class="m-0 px-1 border-0" (click)="removeItem(i)">X</button>
-              </td>
-            </tr>
-          </tbody>
-        </table-->
       </div>
     </form>
   </div>

@@ -1,3 +1,4 @@
+import { LiveSessionServiceProvider } from './live-session.service.provider';
 import { SharedStateService } from './shared-state.service';
 import { MyRouterOutlet } from './my-router-outlet';
 import { TabControlService } from './tab-control.service';
@@ -72,6 +73,7 @@ const ROUTES = [
   providers: [
     SongsServiceProvider,
     WorshipsServiceProvider,
+    LiveSessionServiceProvider,
     TabControlService,
     SharedStateService,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}

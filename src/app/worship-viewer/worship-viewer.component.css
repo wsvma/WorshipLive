@@ -1,0 +1,12 @@
+p {
+    line-height: 1em;
+    font-size: 2em;
+}
+
+.footer {
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font-size: 0.8em;
+}

@@ -1,3 +1,16 @@
-<p *ngIf="worship">
-  {{ worship.name }}
-</p>
+<div class="holder h-100" style="position:relative" tabindex="0" (keyup)="onKeyUp($event)" *ngIf="currentParagraph as para">
+  <div class="d-flex flex-column p-2 h-100">
+    <div class="region1 flex-1 m-auto d-flex flex-column align-items-center justify-content-end">
+      <p *ngFor="let line of para.getRegion1Lines()">{{ line }}</p>
+    </div>
+    <div class="region2 flex-1 m-auto d-flex flex-column align-items-center justify-content-start">
+      <p *ngFor="let line of para.getRegion2Lines()">{{ line }}</p>
+    </div>
+  </div>
+  <div class="footer w-100 h-100">
+    <div class="d-flex h-100 flex-column justify-content-end" *ngIf="currentItem as item">
+      <div class="ml-auto mb-auto">{{ item.title }}</div>
+      <div class="ml-auto">{{ liveSession.pageIndex+1 }}.{{liveSession.paragraphIndex+1}} of {{ currentItem.getPages().length }}</div>
+    </div>
+  </div>
+</div>

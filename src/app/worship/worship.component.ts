@@ -61,8 +61,11 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
 
   create() {
     let w = new Worship(new WorshipInDb());
-    w.name = new Date().toDateString();
-    this.worshipService.create(w);
+    w.name = 'New';
+    this.worshipService.create(w)
+      .then((newWorship) => {
+        this.router.navigateByUrl('/worship/' + newWorship._id);
+      });
   }
 
   routeToEdit() {

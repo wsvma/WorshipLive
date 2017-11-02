@@ -1,40 +1,95 @@
-import { Observer } from 'rxjs/Rx';
+import { LiveSession } from '../../models/live-session';
 import { Worship } from '../../models/worship';
-import { WorshipsService } from '../worships.service';
-import { SharedStateService } from '../shared-state.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-worship-viewer',
   templateUrl: './worship-viewer.component.html',
   styleUrls: ['./worship-viewer.component.css']
 })
-export class WorshipViewerComponent implements OnInit {
+export class WorshipViewerComponent {
 
-  @Input() worshipId : string = '';
-  @Input() worshipFromDb : boolean = true;
+  @Input() liveSession : LiveSession;
+  @Input() worship : Worship;
 
-  worship: Worship;
+  constructor() {}
 
-  constructor(private state: SharedStateService,
-              private worshipsService: WorshipsService) {}
+  get currentItem() {
+    if (this.worship && this.liveSession)
+      return this.worship.items[this.liveSession.itemIndex];
 
-  ngOnInit() {
-    let observer : Observer<Worship> = {
-      next: (worship) => {
-        this.worship = worship;
-      },
-      error: (err) => {
-        this.worship = null;
-      },
-      complete: () => {}
-    }
-    if (this.worshipFromDb) {
-      this.worshipsService.get(this.worshipId).subscribe(observer);
+    return null;
+  }
+
+  get currentPage() {
+    if (this.currentItem)
+      return this.currentItem.getPages()[this.liveSession.pageIndex];
+
+    return null;
+  }
+
+  get currentParagraph() {
+    if (this.currentPage)
+      return this.currentPage.getParagraphs()[this.liveSession.paragraphIndex];
+
+    return null;
+  }
+
+  moveToNextParagraph() {
+    if (this.liveSession.paragraphIndex == this.currentPage.getParagraphs().length-1) {
+      if (this.liveSession.pageIndex == this.currentItem.getPages().length-1) {
+        return;
+      }
+      this.liveSession.paragraphIndex = 0;
+      this.liveSession.pageIndex++;
     } else {
-      this.state.activeWorship.getObservable().subscribe(observer);
+      this.liveSession.paragraphIndex++;
+    }
+  }
+
+  moveToPrevParagraph() {
+    if (this.liveSession.paragraphIndex == 0) {
+      if (this.liveSession.pageIndex == 0) {
+        return;
+      }
+      this.liveSession.pageIndex--;
+      this.liveSession.paragraphIndex = this.currentPage.getParagraphs().length-1;
+    } else {
+      this.liveSession.paragraphIndex--;
+    }
+  }
+
+  moveToPrevItem() {
+    if (this.liveSession.itemIndex) {
+      this.liveSession.itemIndex--;
+      this.liveSession.pageIndex = 0;
+      this.liveSession.paragraphIndex = 0;
+    }
+  }
+
+  moveToNextItem() {
+    if (this.liveSession.itemIndex < this.worship.items.length-1) {
+      this.liveSession.itemIndex++;
+      this.liveSession.pageIndex = 0;
+      this.liveSession.paragraphIndex = 0;
     }
 
   }
 
+  onKeyUp($event : KeyboardEvent) {
+    switch ($event.code) {
+      case "ArrowUp":
+        this.moveToPrevParagraph();
+        break;
+      case "ArrowDown":
+        this.moveToNextParagraph();
+        break;
+      case "ArrowLeft":
+        this.moveToPrevItem();
+        break;
+      case "ArrowRight":
+        this.moveToNextItem();
+        break;
+    }
+  }
 }

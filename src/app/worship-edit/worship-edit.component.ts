@@ -1,3 +1,4 @@
+import { LiveSession, LiveSessionInDb } from '../../models/live-session';
 import { Song } from '../../models/song';
 import { SharedStateService } from '../shared-state.service';
 import { ComponentWithDataTable } from '../component-with-dtable';
@@ -18,12 +19,12 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 })
 export class WorshipEditComponent extends ComponentWithDataTable<Song> implements OnInit {
 
+  previewSession : LiveSession;
   tabSelected = 'worship';
   selectedItem = null;
   worshipId : string;
   worship : Worship;
   original : Worship;
-  addNew : boolean;
   subscription : Subscription;
   errorMessage : string = "The worship is no longer in database. Someone removed it just now.";
 
@@ -39,7 +40,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     super(vcr, toastr, dialogService);
     this.worship = new Worship(new WorshipInDb());
     this.original = Object.assign({}, this.worship);
-    this.addNew = (this.worshipId === 'new');
+    this.previewSession = new LiveSession(new LiveSessionInDb());
   }
 
   updateTab() {
@@ -52,27 +53,25 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   }
 
   reloadWorshipFromDb() {
-    if (!this.addNew) {
-      let observer : Observer<Worship> = {
-        next: (worship) => {
-          if (this.worship && this.worship._id != '') {
-            this.showSuccess('Worship updated.');
-          }
-          this.original = worship.getClone();
-          this.state.activeWorship.update(worship.getClone());
-        },
-        error: (err) => {
-          this.worship = null;
-          this.errorMessage = err.message;
-        },
-        complete: () => {}
-      }
-      if (this.subscription)
-        this.subscription.unsubscribe();
-
-      this.worshipId = this.route.snapshot.paramMap.get('id');
-      this.subscription = this.worshipService.get(this.worshipId).subscribe(observer);
+    let observer : Observer<Worship> = {
+      next: (worship) => {
+        if (this.worship && this.worship._id != '') {
+          this.showSuccess('Worship updated.');
+        }
+        this.original = worship.getClone();
+        this.state.activeWorship.update(worship.getClone());
+      },
+      error: (err) => {
+        this.worship = null;
+        this.errorMessage = err.message;
+      },
+      complete: () => {}
     }
+    if (this.subscription)
+      this.subscription.unsubscribe();
+
+    this.worshipId = this.route.snapshot.paramMap.get('id');
+    this.subscription = this.worshipService.get(this.worshipId).subscribe(observer);
   }
 
   ngOnInit() {
@@ -89,12 +88,13 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     return !this.worship.isEqual(this.original);
   }
 
-  onRowSelected(item) {
+  onRowSelected(index, item) {
     if (item == this.selectedItem)
       this.selectedItem = null;
-    else
+    else {
       this.selectedItem = item;
-    console.log('onRowSelected');
+      this.previewSession.itemIndex = index;
+    }
   }
 
   removeItem(index) {

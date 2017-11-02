@@ -1,3 +1,4 @@
+import { Page } from './page';
 import { DbObj, DbObjBase } from './dbobj';
 import * as countWord from 'wordcount';
 import * as hasChinese from 'has-chinese';
@@ -54,14 +55,14 @@ export class Song extends SongInDb implements DbObj {
     }
 
     get toBaseFormat() : SongInDb {
-        let songInDb: SongInDb = new SongInDb();
+        let objInDb: SongInDb = new SongInDb();
         this.countWordsInTitle();
-        for (let prop in songInDb)
-            if (Array.isArray(songInDb[prop]))
-                songInDb[prop] = this[prop].slice();
+        for (let prop in objInDb)
+            if (Array.isArray(objInDb[prop]))
+                objInDb[prop] = this[prop].slice();
             else
-                songInDb[prop] = this[prop];
-        return songInDb;
+                objInDb[prop] = this[prop];
+        return objInDb;
     }
 
     countWordsInTitle() {
@@ -82,8 +83,7 @@ export class Song extends SongInDb implements DbObj {
         return new Song(this.toBaseFormat);
     }
 
-    private getSegments(lyrics: string)
-    {
+    private getSegments(lyrics: string) : Segment[] {
         let segments = [];
         let re = new RegExp('\\n*\\[.*\\]\\n*', 'g');
         let contents = lyrics.split(re);
@@ -96,7 +96,28 @@ export class Song extends SongInDb implements DbObj {
     }
 
     get tags() {
-        let segments = this.getSegments(this.lyrics_1);
-        return segments.map(s => s.name);
+        return this.getPages().map(p => p.name);
+    }
+
+    getPages() : Page[] {
+        let pagesArr = [];
+        let pagesMap = {};
+        for (let s of this.getSegments(this.lyrics_1)) {
+            let page = new Page(s.name, s.value, '', 2);
+            pagesMap[s.name] = page;
+            pagesArr.push(page);
+        }
+        if (this.lyrics_2) {
+            for (let s of this.getSegments(this.lyrics_2)) {
+                if (s.name in pagesMap)
+                    pagesMap[s.name].content2 = s.value;
+                else {
+                    let page = new Page(s.name, '', s.value, 2);
+                    pagesMap[s.name] = page;
+                    pagesArr.push(page);
+                }
+            }
+        }
+        return pagesArr;
     }
 }

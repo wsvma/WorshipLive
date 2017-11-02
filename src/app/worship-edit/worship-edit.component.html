@@ -10,7 +10,7 @@
       <div class="px-2" *ngIf="worship">
         <label>Items</label>
         <ol class="list-group list-group-hover" [sortablejs]="worship.items">
-          <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(song)" [ngClass]="{active:song==selectedItem}">
+          <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
             {{ song.title }}
             <button (click)="removeItem(i)">X</button>
           </li>
@@ -29,8 +29,8 @@
       </div>
       <div class="flex-1 debug-border">
         <app-worship-viewer
-          [worshipId]="worshipId"
-          [worshipFromDb]="false">
+          [liveSession]="previewSession"
+          [worship]="worship">
         </app-worship-viewer>
       </div>
     </div>

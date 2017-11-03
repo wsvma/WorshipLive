@@ -23,6 +23,8 @@ import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorshipEditComponent } from './worship-edit/worship-edit.component';
 import { WorshipViewerComponent } from './worship-viewer/worship-viewer.component';
+import { LiveControlComponent } from './live-control/live-control.component';
+import { LiveViewComponent } from './live-view/live-view.component';
 
 const ROUTES = [
   {
@@ -42,6 +44,14 @@ const ROUTES = [
     component: WorshipComponent
   },
   {
+    path: 'live-control/:id',
+    component: LiveControlComponent
+  },
+  {
+    path: 'live/:id',
+    component: LiveViewComponent
+  },
+  {
     path: '',
     redirectTo: 'songs',
     pathMatch: 'full'
@@ -58,6 +68,8 @@ const ROUTES = [
     WorshipEditComponent,
     MyRouterOutlet,
     WorshipViewerComponent,
+    LiveControlComponent,
+    LiveViewComponent,
   ],
   imports: [
     SortablejsModule,

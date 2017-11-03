@@ -22,6 +22,7 @@ export abstract class FeatherService<T> {
   public abstract async create(obj: T);
   public abstract async update(obj: T);
   public abstract async remove(objects: T[]);
+  public abstract async removeWithId(ids: string[]);
   public abstract lookup(id: string);
 }
 
@@ -37,7 +38,7 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
       objArray: T[];
     }
 
-    constructor(private tConstructor: new(tb:TBase) => T, serviceName: string) {
+    constructor(private tConstructor: new(tb:TBase, service) => T, serviceName: string) {
 
       super();
 
@@ -64,7 +65,7 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
             }
             this.dataStore.objArray = [];
             for (let o of objects) {
-              let newObj: T = new this.tConstructor(o);
+              let newObj: T = new this.tConstructor(o, this);
               this.dataStore.objArray.push(newObj);
             }
             observer.next(this.dataStore.objArray);
@@ -87,7 +88,7 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
               observer.error(err);
               return;
             }
-            this.dataStore.objMap[id] = new this.tConstructor(obj);
+            this.dataStore.objMap[id] = new this.tConstructor(obj, this);
             observer.next(this.dataStore.objMap[id]);
           });
         }
@@ -108,6 +109,10 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
 
     public async remove(objects: T[]) {
       return await Promise.all(objects.map(obj => this.service.remove(obj['_id'])));
+    }
+
+    public async removeWithId(ids: string[]) {
+      return await Promise.all(ids.map(id => this.service.remove(id)));
     }
 
     public lookup(id: string) {
@@ -137,18 +142,18 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     }
 
     private onCreated(obj: TBase) {
-      this.dataStore.objArray.push(new this.tConstructor(obj));
+      this.dataStore.objArray.push(new this.tConstructor(obj, this));
       this.updateFindObservers();
     }
 
     private onUpdated(obj: TBase) {
 
       const index = this.getIndex(obj._id);
-      this.dataStore.objArray[index] = new this.tConstructor(obj);
+      this.dataStore.objArray[index] = new this.tConstructor(obj, this);
       this.updateFindObservers();
 
       if (obj._id in this.dataStore.objMap) {
-        this.dataStore.objMap[obj._id] = new this.tConstructor(obj);
+        this.dataStore.objMap[obj._id] = new this.tConstructor(obj, this);
         this.updateGetObservers(obj._id);
       }
     }

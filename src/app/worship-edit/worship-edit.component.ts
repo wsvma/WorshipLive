@@ -1,3 +1,4 @@
+import { LiveSessionService } from '../live-session.service';
 import { LiveSession, LiveSessionInDb } from '../../models/live-session';
 import { Song } from '../../models/song';
 import { SharedStateService } from '../shared-state.service';
@@ -31,6 +32,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   constructor(private tabService: TabControlService,
               private route: ActivatedRoute,
               private worshipService: WorshipsService,
+              private liveSessionService: LiveSessionService,
               private router: Router,
               public  state: SharedStateService,
               vcr: ViewContainerRef,
@@ -38,9 +40,9 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
               dialogService: DialogService) {
 
     super(vcr, toastr, dialogService);
-    this.worship = new Worship(new WorshipInDb());
+    this.worship = new Worship();
     this.original = Object.assign({}, this.worship);
-    this.previewSession = new LiveSession(new LiveSessionInDb());
+    this.previewSession = new LiveSession();
   }
 
   updateTab() {
@@ -48,13 +50,15 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
       id: 'worship',
       isActive: true,
       display: 'Worship (' + this.worship.name + ')',
-      link: 'worship/' + this.worshipId
+      link: 'worship/' + this.worshipId,
+      fullscreen: false,
     });
   }
 
   reloadWorshipFromDb() {
     let observer : Observer<Worship> = {
       next: (worship) => {
+        if (worship.liveId)
         if (this.worship && this.worship._id != '') {
           this.showSuccess('Worship updated.');
         }
@@ -90,11 +94,10 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
 
   onRowSelected(index, item) {
     if (item == this.selectedItem)
-      this.selectedItem = null;
-    else {
-      this.selectedItem = item;
-      this.previewSession.itemIndex = index;
-    }
+      return;
+
+    this.selectedItem = item;
+    this.previewSession.setIndices(index, 0, 0);
   }
 
   removeItem(index) {
@@ -112,6 +115,25 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
       this.reloadWorshipFromDb();
     else
       this.updateTab();
+  }
+
+  goLive() {
+    if (this.worship.liveId) {
+      this.liveSessionService.removeWithId([this.worship.liveId]);
+      this.worship.liveId = '';
+      this.worship.update();
+      this.tabService.removeTabsWithId('live-control');
+      return;
+    }
+
+    let liveSession = new LiveSession();
+    liveSession.worshipId = this.worshipId;
+    this.liveSessionService.create(liveSession)
+      .then((newLive) => {
+        this.worship.liveId = newLive._id;
+        this.worship.update();
+        this.router.navigateByUrl('/live-control/' + newLive._id);
+      });
   }
 
   navigateBack() {

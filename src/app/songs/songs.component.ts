@@ -61,7 +61,8 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
       id: 'songs',
       isActive: true,
       display: 'Songs',
-      link: 'songs'
+      link: 'songs',
+      fullscreen: false,
     });
   }
 

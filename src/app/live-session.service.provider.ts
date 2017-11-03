@@ -6,6 +6,6 @@ export let liveSessionsServiceFactory = () => {
 }
 
 export let LiveSessionServiceProvider = {
-    provide: LiveSession,
+    provide: LiveSessionService,
     useFactory: liveSessionsServiceFactory
 }

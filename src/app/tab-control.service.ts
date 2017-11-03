@@ -6,6 +6,7 @@ export interface Tab {
   display: string;
   link: string;
   isActive: boolean;
+  fullscreen: boolean;
 }
 
 @Injectable()
@@ -17,13 +18,15 @@ export class TabControlService {
       id: 'worship',
       display: 'Worship',
       link: 'worship',
-      isActive: true
+      isActive: true,
+      fullscreen: false,
     },
     {
       id: 'songs',
       display: 'Songs',
       link: 'songs',
-      isActive: false
+      isActive: false,
+      fullscreen: false,
     }
   ];
 
@@ -33,16 +36,66 @@ export class TabControlService {
   }
 
   updateTab(tab: Tab) {
+    if (tab.isActive)
+      this.setInactiveToAll();
     for (let i = 0; i < this.snapshot.length; i++) {
       if (this.snapshot[i].id === tab.id) {
-        if (tab.isActive) {
-          for (let j = 0; j < this.snapshot.length; j++)
-            this.snapshot[j].isActive = false;
-        }
         this.snapshot[i] = tab;
         this.tabs.next(this.snapshot);
-        break;
+        return;
       }
     }
+    this.snapshot.push(tab);
+    this.tabs.next(this.snapshot);
+  }
+
+  patchTab(tab: Tab) {
+    for (let i = 0; i < this.snapshot.length; i++) {
+      if (this.snapshot[i].id === tab.id) {
+        for (let prop in tab)
+          if (prop != 'isActive')
+            this.snapshot[i][prop] = tab[prop];
+        this.tabs.next(this.snapshot);
+        return;
+      }
+    }
+    tab['isActive'] = false;
+    this.snapshot.push(tab);
+    this.tabs.next(this.snapshot);
+  }
+
+  removeTabsWithId(id) {
+    for (let tab of this.snapshot) {
+      if (tab.id === id) {
+        this.removeTab(tab);
+        return;
+      }
+    }
+  }
+
+  removeTab(tab: Tab) {
+    let index = this.findTabIndex(tab);
+    if (index >= 0) {
+      this.snapshot.splice(index, 1);
+      if (tab.isActive) {
+        this.setInactiveToAll();
+        if (this.snapshot.length)
+          this.snapshot[0].isActive = true;
+      }
+      this.tabs.next(this.snapshot);
+    }
+  }
+
+  private setInactiveToAll() {
+    for (let tab of this.snapshot)
+      tab.isActive = false;
+  }
+
+  private findTabIndex(tab) {
+    for (let i = 0; i < this.snapshot.length; i++) {
+      if (this.snapshot[i].id === tab.id)
+        return i;
+    }
+    return -1;
   }
 }

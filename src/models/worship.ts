@@ -1,19 +1,24 @@
+import { FeatherService } from '../app/feather.service';
 import { Song, SongInDb } from './song';
 import { DbObj, DbObjBase } from './dbobj';
 
 export class WorshipInDb extends DbObjBase {
 
     name: string = '';
+    liveId: string = '';
     itemsInDb: SongInDb[] = [];
 }
 
 export class Worship extends WorshipInDb implements DbObj {
 
     removed: boolean;
+    service: FeatherService<Worship>;
+
     items: Song[] = [];
 
-    constructor(worshipInDb: WorshipInDb) {
+    constructor(worshipInDb: WorshipInDb = new WorshipInDb(), service = null) {
         super();
+        this.service = service;
         Object.assign(this, worshipInDb);
         for (let i = 0; i < worshipInDb.itemsInDb.length; i++)
             this.items[i] = new Song(worshipInDb.itemsInDb[i]);
@@ -30,10 +35,16 @@ export class Worship extends WorshipInDb implements DbObj {
     }
 
     isEqual(worship : Worship) {
-        return JSON.stringify(this) == JSON.stringify(worship);
+        return JSON.stringify(this, this.replacer) == JSON.stringify(worship, this.replacer);
     }
 
     getClone() {
-        return new Worship(this.toBaseFormat);
+        return new Worship(this.toBaseFormat, this.service);
+    }
+
+    update() {
+        if (this.service)
+            return this.service.update(this);
+        return null;
     }
 }

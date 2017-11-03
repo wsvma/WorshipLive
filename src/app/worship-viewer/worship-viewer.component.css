@@ -10,3 +10,7 @@ p {
     z-index: 2;
     font-size: 0.8em;
 }
+
+.holder {
+    outline: none;
+}

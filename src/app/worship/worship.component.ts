@@ -49,7 +49,8 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
       id: 'worship',
       display: 'Worship',
       isActive: true,
-      link: 'worship'
+      link: 'worship',
+      fullscreen: false,
     });
   }
 
@@ -60,7 +61,7 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
   }
 
   create() {
-    let w = new Worship(new WorshipInDb());
+    let w = new Worship();
     w.name = 'New';
     this.worshipService.create(w)
       .then((newWorship) => {

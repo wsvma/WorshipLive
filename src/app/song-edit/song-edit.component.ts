@@ -49,7 +49,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
               private dialogService: DialogService) {
 
     this.songId = this.route.snapshot.paramMap.get('id');
-    this.song = new Song(new SongInDb());
+    this.song = new Song();
     this.original = Object.assign({}, this.song);
     this.addNew = (this.songId === 'new');
   }
@@ -67,7 +67,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
       id: 'songs',
       isActive: true,
       display: 'Song (' + this.song.title + ')',
-      link: 'songs/' + this.songId
+      link: 'songs/' + this.songId,
+      fullscreen: false,
     });
   }
 

@@ -1,3 +1,4 @@
+import { FeatherService } from '../app/feather.service';
 import { Page } from './page';
 import { DbObj, DbObjBase } from './dbobj';
 import * as countWord from 'wordcount';
@@ -32,9 +33,11 @@ class Segment {
 export class Song extends SongInDb implements DbObj {
 
     removed: boolean;
+    service: FeatherService<Song>;
 
-    constructor(songInDb: SongInDb) {
+    constructor(songInDb: SongInDb = new SongInDb(), service = null) {
         super();
+        this.service = service;
         for (let prop in songInDb)
             if (Array.isArray(songInDb[prop]))
                 this[prop] = songInDb[prop].slice();
@@ -76,11 +79,11 @@ export class Song extends SongInDb implements DbObj {
     }
 
     isEqual(song : Song) {
-        return JSON.stringify(this) == JSON.stringify(song);
+        return JSON.stringify(this, this.replacer) == JSON.stringify(song, this.replacer);
     }
 
     getClone() {
-        return new Song(this.toBaseFormat);
+        return new Song(this.toBaseFormat, this.service);
     }
 
     private getSegments(lyrics: string) : Segment[] {
@@ -119,5 +122,11 @@ export class Song extends SongInDb implements DbObj {
             }
         }
         return pagesArr;
+    }
+
+    update() {
+        if (this.service)
+            return this.service.update(this);
+        return null;
     }
 }

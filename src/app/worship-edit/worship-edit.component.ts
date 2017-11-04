@@ -86,6 +86,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
         if (worship) {
           this.tabSelf.display = 'Worship (' + this.worship.name + ')';
           this.tabSelf.link = 'worship/' + this.worshipId;
+          this.tabSelf.update();
         }
       });
     this.reloadWorshipFromDb();
@@ -116,8 +117,8 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   onAttached() {
     if (!this.state.activeWorship.snapshot)
       this.reloadWorshipFromDb();
-    else
-      this.updateTab();
+
+    this.updateTab();
   }
 
   goLive() {

@@ -22,11 +22,12 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.tabControlService.tabs.subscribe(tabs => {
-      this.tabs = tabs;
-      for (let t of tabs)
-        if (t.isActive) {
+      this.tabs = []
+      for (let t of tabs) {
+        this.tabs.push(t.clone());
+        if (t.isActive)
           this.hideTab = t.fullscreen;
-        }
+      }
     });
   }
 

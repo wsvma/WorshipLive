@@ -88,6 +88,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
           this.original = song.getClone();
           this.tabSelf.display = 'Song (' + this.song.title + ')';
           this.tabSelf.link = 'songs/' + this.songId;
+          this.tabSelf.update();
         },
         error: (err) => {
           this.song = null;
@@ -123,8 +124,6 @@ export class SongEditComponent implements OnInit, OnDestroy {
 
   addTagToSequences(tag) {
     this.song.order.push(tag);
-    console.log(JSON.stringify(this.song));
-    console.log(JSON.stringify(this.original));
   }
 
   onScroll($event) {

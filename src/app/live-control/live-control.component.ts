@@ -58,6 +58,10 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
     this.router.navigateByUrl('live');
   }
 
+  navigateWorship() {
+    this.router.navigateByUrl('worship/' + this.worship._id);
+  }
+
   goWatch() {
     window.open('live/' + this.liveId);
   }
@@ -78,6 +82,7 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
         this.liveSession.worshipName = worship.name;
         this.tabSelf.display = 'Live (' + this.worship.name + ')';
         this.tabSelf.link = 'live-control/' + this.liveId;
+        this.tabSelf.update();
       }));
     }));
   }

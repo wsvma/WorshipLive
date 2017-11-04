@@ -14,6 +14,17 @@ export class Tab {
   update() {
     this.service.updateTab(this);
   }
+
+  replacer(key, value) {
+    if (key === 'service')
+      return undefined;
+
+    return value;
+  }
+
+  clone() {
+    return JSON.parse(JSON.stringify(this, this.replacer));
+  }
 }
 
 @Injectable()

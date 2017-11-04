@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Worship } from '../../models/worship';
 import { WorshipsService } from '../worships.service';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { Subscription } from 'rxjs/Rx';
 import { LiveSession } from '../../models/live-session';
 import { LiveSessionService } from '../live-session.service';
@@ -14,6 +14,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LiveListingComponent implements OnInit {
 
+  tabSelf: Tab;
+  tabControl: Tab;
   liveSessions: LiveSession[];
   subscription: Subscription;
 
@@ -22,7 +24,10 @@ export class LiveListingComponent implements OnInit {
     private liveSessionService: LiveSessionService,
     private worshipService: WorshipsService,
     private router: Router
-  ) { }
+  ) {
+    this.tabSelf = this.tabService.getTab('live');
+    this.tabControl = this.tabService.getTab('live-control');
+  }
 
   ngOnInit() {
     this.subscription = this.liveSessionService.find().subscribe((liveSessions: LiveSession[]) => {
@@ -35,13 +40,12 @@ export class LiveListingComponent implements OnInit {
   }
 
   updateTab() {
-    this.tabService.updateTab({
-      id: 'live',
-      display: 'Live Sessions',
-      isActive: true,
-      link: 'live',
-      fullscreen: false,
-    });
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabControl.isActive = false;
+    this.tabControl.isHidden = true;
+    this.tabControl.update();
   }
 
   navigateWorship(live : LiveSession) {
@@ -53,7 +57,7 @@ export class LiveListingComponent implements OnInit {
   }
 
   navigateWatch(live) {
-
+    window.open('live/' + live._id);
   }
 
   unlive(liveSession : LiveSession, index : number) {

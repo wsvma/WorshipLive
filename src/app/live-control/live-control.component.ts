@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Rx';
 import { LiveSessionService } from '../live-session.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LiveSession } from '../../models/live-session';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
@@ -15,25 +15,30 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 })
 export class LiveControlComponent extends LiveController implements OnInit, OnDestroy {
 
-  liveId;
+  tabSelf: Tab;
+  tabList: Tab;
+  liveId: string;
   selectedItem = null;
   subscriptions: Subscription[] = [];
   errorMessage = 'Live session no longer exists. It is unlived by someone else already.';
 
-  constructor(
-    private tabService: TabControlService,
-    private liveSessionService: LiveSessionService,
-    private worshipService: WorshipsService,
-    private route: ActivatedRoute,
-    private router: Router) {
-      super();
-    }
+  constructor(private tabService: TabControlService,
+              private liveSessionService: LiveSessionService,
+              private worshipService: WorshipsService,
+              private route: ActivatedRoute,
+              private router: Router) {
+    super();
+    this.tabSelf = this.tabService.getTab('live-control');
+    this.tabList = this.tabService.getTab('live');
+  }
 
   updateTab() {
-    if (!this.worship || !this.liveSession)
-      return;
-
-    this.tabService.updateTab(this.liveSession.getControlTab(true));
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabList.isActive = false;
+    this.tabList.isHidden = true;
+    this.tabList.update();
   }
 
   onAttached() {
@@ -53,12 +58,15 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
     this.router.navigateByUrl('live');
   }
 
+  goWatch() {
+    window.open('live/' + this.liveId);
+  }
+
   ngOnInit() {
     this.liveId = this.route.snapshot.paramMap.get('id');
     this.subscriptions.push(this.liveSessionService.get(this.liveId).subscribe((live : LiveSession) => {
       this.liveSession = live;
       if (live.removed) {
-        this.tabService.removeTabsWithId('live-control');
         this.router.navigateByUrl('live');
       }
       if (this.worship) {
@@ -68,9 +76,8 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
       this.subscriptions.push(this.worshipService.get(live.worshipId).subscribe((worship : Worship) => {
         this.worship = worship;
         this.liveSession.worshipName = worship.name;
-        if (worship.liveId == this.liveId) {
-          this.updateTab();
-        }
+        this.tabSelf.display = 'Live (' + this.worship.name + ')';
+        this.tabSelf.link = 'live-control/' + this.liveId;
       }));
     }));
   }

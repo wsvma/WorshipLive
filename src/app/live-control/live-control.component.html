@@ -1,19 +1,24 @@
-<button class="btn btn-default" (click)="navigateBack()">&larr; Back</button>
-<div class="w-100 h-100 d-flex" tabindex="0" (keyup)="onKeyUp($event)" *ngIf="liveSession && !liveSession.removed else showError">
-  <div class="flex-1 d-flex flex-column">
-    <ol class="list-group list-group-hover mt-auto mb-auto" *ngIf="worship">
-      <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
-        {{ song.title }}
-      </li>
-    </ol>
+<div class="w-100 h-100 d-flex flex-column">
+  <div>
+    <button class="btn btn-default" (click)="navigateBack()">&larr; Back</button>
+    <button class="btn btn-primary" (click)="goWatch()">Watch (in new window)</button>
   </div>
-  <div class="flex-1">
-    <app-worship-viewer
+  <div class="d-flex flex-1" tabindex="0" (keyup)="onKeyUp($event)" *ngIf="liveSession && !liveSession.removed else showError">
+    <div class="flex-1 d-flex flex-column">
+      <ol class="list-group list-group-hover mt-auto mb-auto" *ngIf="worship">
+        <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
+          {{ song.title }}
+        </li>
+      </ol>
+    </div>
+    <div class="flex-1">
+      <app-worship-viewer
       [worship]="worship"
       [liveSession]="liveSession">
-    </app-worship-viewer>
+      </app-worship-viewer>
+    </div>
   </div>
+  <ng-template #showError>
+      {{ errorMessage }}
+    </ng-template>
 </div>
-<ng-template #showError>
-  {{ errorMessage }}
-</ng-template>

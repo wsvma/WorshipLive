@@ -10,7 +10,7 @@ import { WorshipsService } from '../worships.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Worship, WorshipInDb } from '../../models/worship';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
 @Component({
@@ -20,6 +20,8 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 })
 export class WorshipEditComponent extends ComponentWithDataTable<Song> implements OnInit {
 
+  tabSelf: Tab;
+  tabList: Tab;
   previewSession : LiveSession;
   tabSelected = 'worship';
   selectedItem = null;
@@ -43,23 +45,22 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     this.worship = new Worship();
     this.original = Object.assign({}, this.worship);
     this.previewSession = new LiveSession();
+    this.tabSelf = this.tabService.getTab('worship-edit');
+    this.tabList = this.tabService.getTab('worship');
   }
 
   updateTab() {
-    this.tabService.updateTab({
-      id: 'worship',
-      isActive: true,
-      display: 'Worship (' + this.worship.name + ')',
-      link: 'worship/' + this.worshipId,
-      fullscreen: false,
-    });
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabList.isActive = false;
+    this.tabList.isHidden = true;
+    this.tabList.update();
   }
 
   reloadWorshipFromDb() {
     let observer : Observer<Worship> = {
       next: (worship) => {
-        if (worship.liveId == '')
-          this.tabService.removeTabsWithId('live-control');
         if (this.worship && this.worship._id != '') {
           this.showSuccess('Worship updated.');
         }
@@ -83,7 +84,8 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     this.state.activeWorship.getObservable().subscribe(worship => {
         this.worship = worship;
         if (worship) {
-          this.updateTab();
+          this.tabSelf.display = 'Worship (' + this.worship.name + ')';
+          this.tabSelf.link = 'worship/' + this.worshipId;
         }
       });
     this.reloadWorshipFromDb();

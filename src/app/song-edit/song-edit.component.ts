@@ -1,7 +1,7 @@
 import { SharedStateService } from '../shared-state.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { Observer, Subscription } from 'rxjs/Rx';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
@@ -21,6 +21,8 @@ interface EditField {
 })
 export class SongEditComponent implements OnInit, OnDestroy {
 
+  tabSelf: Tab;
+  tabList: Tab;
   selectedTag : string = '';
   addNew : boolean = false;
   songId : string;
@@ -52,6 +54,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
     this.song = new Song();
     this.original = Object.assign({}, this.song);
     this.addNew = (this.songId === 'new');
+    this.tabSelf = this.tabService.getTab('song-edit');
+    this.tabList = this.tabService.getTab('songs');
   }
 
   onAttached() {
@@ -63,13 +67,12 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   updateTab() {
-    this.tabService.updateTab({
-      id: 'songs',
-      isActive: true,
-      display: 'Song (' + this.song.title + ')',
-      link: 'songs/' + this.songId,
-      fullscreen: false,
-    });
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabList.isActive = false;
+    this.tabList.isHidden = true;
+    this.tabList.update();
   }
 
   onKeyUp($event: KeyboardEvent) {
@@ -83,7 +86,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
         next: (song) => {
           this.song = song.getClone();
           this.original = song.getClone();
-          this.updateTab();
+          this.tabSelf.display = 'Song (' + this.song.title + ')';
+          this.tabSelf.link = 'songs/' + this.songId;
         },
         error: (err) => {
           this.song = null;

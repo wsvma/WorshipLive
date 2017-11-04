@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ToastsManager } from 'ng2-toastr';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
@@ -16,6 +16,8 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 })
 export class WorshipComponent extends ComponentWithDataTable<Worship> implements OnInit {
 
+  tabSelf: Tab;
+  tabEdit: Tab;
   dataColumns : DataColumn[] = [
     new DataColumn('name',         'Name',   true),
     new DataColumn('date_created',  'Date Created', true),
@@ -31,6 +33,8 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
 
     super(vcr, toastr, dialogService);
     this.dataService = worshipService;
+    this.tabSelf = this.tabService.getTab('worship');
+    this.tabEdit = this.tabService.getTab('worship-edit');
   }
 
   ngOnInit() {
@@ -41,17 +45,12 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
   }
 
   onAttached() {
-    this.updateTab();
-  }
-
-  updateTab() {
-    this.tabService.updateTab({
-      id: 'worship',
-      display: 'Worship',
-      isActive: true,
-      link: 'worship',
-      fullscreen: false,
-    });
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabEdit.isActive = false;
+    this.tabEdit.isHidden = true;
+    this.tabEdit.update();
   }
 
   worshipDoubleClicked(event) {

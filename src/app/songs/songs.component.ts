@@ -1,5 +1,5 @@
 import { SharedStateService } from '../shared-state.service';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
@@ -27,6 +27,8 @@ class Filters {
 })
 export class SongsComponent extends ComponentWithDataTable<Song> implements OnInit {
 
+  tabSelf: Tab;
+  tabEdit: Tab;
   filters: Filters = new Filters();
   dataColumns : DataColumn[] = [
     new DataColumn('title',         'Title',   true),
@@ -50,6 +52,8 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
 
       super(vcr, toastr, dialogService);
       this.dataService = songService;
+      this.tabSelf = this.tabService.getTab('songs');
+      this.tabEdit = this.tabService.getTab('song-edit');
     }
 
   onAttached() {
@@ -57,13 +61,12 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
   }
 
   updateTab() {
-    this.tabService.updateTab({
-      id: 'songs',
-      isActive: true,
-      display: 'Songs',
-      link: 'songs',
-      fullscreen: false,
-    });
+    this.tabSelf.isActive = true;
+    this.tabSelf.isHidden = false;
+    this.tabSelf.update();
+    this.tabEdit.isActive = false;
+    this.tabEdit.isHidden = true;
+    this.tabEdit.update();
   }
 
   ngOnInit() {

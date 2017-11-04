@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Rx';
 import { LiveSessionService } from '../live-session.service';
 import { ActivatedRoute } from '@angular/router';
 import { LiveSession } from '../../models/live-session';
-import { TabControlService } from '../tab-control.service';
+import { Tab, TabControlService } from '../tab-control.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
@@ -15,28 +15,22 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 })
 export class LiveViewComponent implements OnInit, OnDestroy {
 
+  tab: Tab;
   liveId;
   worship: Worship;
   liveSession: LiveSession;
   subscriptions: Subscription[] = [];
 
-  constructor(
-    private tabService: TabControlService,
-    private liveSessionService: LiveSessionService,
-    private worshipService: WorshipsService,
-    private route: ActivatedRoute) {}
+  constructor(private tabService: TabControlService,
+              private liveSessionService: LiveSessionService,
+              private worshipService: WorshipsService,
+              private route: ActivatedRoute) {
+    this.tab = this.tabService.getTab('live-view');
+  }
 
   updateTab() {
-    if (!this.worship || !this.liveSession)
-      return;
-
-    this.tabService.updateTab({
-      id: 'live-view-' + this.liveId,
-      display: 'Live (' + this.worship.name + ')',
-      isActive: true,
-      link: 'live/' + this.liveId,
-      fullscreen: true,
-    });
+    this.tab.isActive = true;
+    this.tab.update();
   }
 
   onAttached() {

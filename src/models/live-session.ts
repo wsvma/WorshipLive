@@ -47,7 +47,6 @@ export class LiveSession extends LiveSessionInDb implements DbObj {
             isActive: isActive,
             link: 'live-control/' + this._id,
             fullscreen: false,
-            closable: true
         };
     }
 

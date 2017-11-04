@@ -1,12 +1,14 @@
 <div class="d-flex flex-column h-100" *ngIf="tabs">
   <ul class="nav nav-tabs" [hidden]="hideTab" style="flex: 0 0 auto">
-    <li class="nav-item" *ngFor="let tab of tabs">
+    <li class="nav-item" *ngFor="let tab of tabs" [hidden]="tab.isHidden">
       <a #worship class="nav-link" [routerLink]="tab.link" [ngClass]="{active: tab.isActive}">
         {{ tab.display }}
       </a>
     </li>
   </ul>
   <div class="flex-1 router-outlet-container">
-    <my-router-outlet (attached)="onComponentAttached($event)" (activate)="onComponentAttached($event)"></my-router-outlet>
+    <my-router-outlet
+      (attached)="onComponentAttached($event)"
+      (activate)="onComponentAttached($event)"></my-router-outlet>
   </div>
 </div>

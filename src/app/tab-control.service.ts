@@ -27,6 +27,13 @@ export class TabControlService {
       link: 'songs',
       isActive: false,
       fullscreen: false,
+    },
+    {
+      id: 'live',
+      display: 'Live Sessions',
+      link: 'live',
+      isActive: false,
+      fullscreen: false,
     }
   ];
 

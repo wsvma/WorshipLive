@@ -42,7 +42,7 @@ export class LiveSession extends LiveSessionInDb implements DbObj {
 
     getControlTab(isActive = false) {
         return {
-            id: 'live-control',
+            id: 'live',
             display: 'Live (' + this.worshipName + ')',
             isActive: isActive,
             link: 'live-control/' + this._id,

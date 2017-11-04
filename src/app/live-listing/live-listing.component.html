@@ -1,0 +1,21 @@
+<div class="h-100 w-100" *ngIf="liveSessions">
+  <table class="table table-striped w-75 debug-border ml-auto mr-auto" style="margin-top: 5%">
+    <thead>
+      <th>Live Sessions</th>
+    </thead>
+    <tbody>
+      <tr *ngIf="liveSessions.length == 0">
+        <td>No live session available</td>
+      </tr>
+      <tr *ngFor="let live of liveSessions; let i = index">
+        <td class="d-flex">
+          {{ live.worshipName }}
+          <button (click)="navigateWorship(live)" class="btn btn-default ml-auto mr-2">Edit Worship</button>
+          <button (click)="navigateControl(live)" class="btn btn-default mr-2">        Control</button>
+          <button (click)="navigateWatch(live)"   class="btn btn-default mr-2">        Watch</button>
+          <button (click)="unlive(live, i)"       class="btn btn-danger">              Unlive</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

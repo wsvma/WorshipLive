@@ -58,7 +58,8 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   reloadWorshipFromDb() {
     let observer : Observer<Worship> = {
       next: (worship) => {
-        if (worship.liveId)
+        if (worship.liveId == '')
+          this.tabService.removeTabsWithId('live-control');
         if (this.worship && this.worship._id != '') {
           this.showSuccess('Worship updated.');
         }
@@ -122,12 +123,12 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
       this.liveSessionService.removeWithId([this.worship.liveId]);
       this.worship.liveId = '';
       this.worship.update();
-      this.tabService.removeTabsWithId('live-control');
       return;
     }
 
     let liveSession = new LiveSession();
     liveSession.worshipId = this.worshipId;
+    liveSession.worshipName = this.worship.name;
     this.liveSessionService.create(liveSession)
       .then((newLive) => {
         this.worship.liveId = newLive._id;

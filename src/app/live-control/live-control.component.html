@@ -1,9 +1,12 @@
+<button class="btn btn-default" (click)="navigateBack()">&larr; Back</button>
 <div class="w-100 h-100 d-flex" tabindex="0" (keyup)="onKeyUp($event)" *ngIf="liveSession && !liveSession.removed else showError">
-  <ol class="list-group list-group-hover mt-auto mb-auto flex-1" *ngIf="worship">
-    <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
-      {{ song.title }}
-    </li>
-  </ol>
+  <div class="flex-1 d-flex flex-column">
+    <ol class="list-group list-group-hover mt-auto mb-auto" *ngIf="worship">
+      <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
+        {{ song.title }}
+      </li>
+    </ol>
+  </div>
   <div class="flex-1">
     <app-worship-viewer
       [worship]="worship"

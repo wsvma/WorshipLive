@@ -25,6 +25,7 @@ import { WorshipEditComponent } from './worship-edit/worship-edit.component';
 import { WorshipViewerComponent } from './worship-viewer/worship-viewer.component';
 import { LiveControlComponent } from './live-control/live-control.component';
 import { LiveViewComponent } from './live-view/live-view.component';
+import { LiveListingComponent } from './live-listing/live-listing.component';
 
 const ROUTES = [
   {
@@ -52,6 +53,10 @@ const ROUTES = [
     component: LiveViewComponent
   },
   {
+    path: 'live',
+    component: LiveListingComponent
+  },
+  {
     path: '',
     redirectTo: 'songs',
     pathMatch: 'full'
@@ -70,6 +75,7 @@ const ROUTES = [
     WorshipViewerComponent,
     LiveControlComponent,
     LiveViewComponent,
+    LiveListingComponent,
   ],
   imports: [
     SortablejsModule,

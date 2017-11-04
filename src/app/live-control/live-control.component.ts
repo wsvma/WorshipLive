@@ -49,13 +49,17 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
     this.liveSession.update();
   }
 
+  navigateBack() {
+    this.router.navigateByUrl('live');
+  }
+
   ngOnInit() {
     this.liveId = this.route.snapshot.paramMap.get('id');
     this.subscriptions.push(this.liveSessionService.get(this.liveId).subscribe((live : LiveSession) => {
       this.liveSession = live;
       if (live.removed) {
         this.tabService.removeTabsWithId('live-control');
-        this.router.navigateByUrl('worship');
+        this.router.navigateByUrl('live');
       }
       if (this.worship) {
         this.selectedItem = this.worship.items[live.itemIndex];
@@ -64,7 +68,9 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
       this.subscriptions.push(this.worshipService.get(live.worshipId).subscribe((worship : Worship) => {
         this.worship = worship;
         this.liveSession.worshipName = worship.name;
-        this.updateTab();
+        if (worship.liveId == this.liveId) {
+          this.updateTab();
+        }
       }));
     }));
   }

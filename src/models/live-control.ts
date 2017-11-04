@@ -84,9 +84,11 @@ export class LiveController {
             this.moveToNextParagraph();
             break;
         case "ArrowLeft":
+        case "PageUp":
             this.moveToPrevItem();
             break;
         case "ArrowRight":
+        case "PageDown":
             this.moveToNextItem();
             break;
         }

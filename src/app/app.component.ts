@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
 
   tabs: Tab[];
   hideTab: boolean = false;
+  outletStyle = {};
 
   constructor(private tabControlService: TabControlService) {
     this.tabs = this.tabControlService.snapshot;
@@ -28,6 +29,8 @@ export class AppComponent implements OnInit {
         if (t.isActive)
           this.hideTab = t.fullscreen;
       }
+      let padding = this.hideTab ? '0' : '10px 10px 18px 10px';
+      this.outletStyle['margin'] = padding;
     });
   }
 

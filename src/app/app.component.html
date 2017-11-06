@@ -6,7 +6,7 @@
       </a>
     </li>
   </ul>
-  <div class="flex-1 router-outlet-container">
+  <div class="flex-1" [ngStyle]="outletStyle">
     <my-router-outlet
       (attached)="onComponentAttached($event)"
       (activate)="onComponentAttached($event)"></my-router-outlet>

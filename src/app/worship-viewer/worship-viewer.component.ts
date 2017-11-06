@@ -16,7 +16,9 @@ export class WorshipViewerComponent extends LiveController implements OnInit {
   @Input() worship : Worship;
   @Output() onPageChange = new EventEmitter<any>();
 
-  style = {};
+  pStyle = {};
+  footerStyle = {};
+  private viewPortToSelfRatio = 1;
 
   constructor() {
     super();
@@ -25,9 +27,15 @@ export class WorshipViewerComponent extends LiveController implements OnInit {
   ngOnInit() {
   }
 
+  private getFontSizeInVw(size) {
+    size = size / this.viewPortToSelfRatio;
+    return size.toPrecision(2).toString() + 'vw';
+  }
+
   ngAfterViewInit() {
-    let ratio = document.documentElement.clientWidth / this.container.nativeElement.clientWidth;
-    let size = 6.5 / ratio;
-    this.style['font-size'] = size.toPrecision(2).toString() + 'vw';
+    this.viewPortToSelfRatio = document.documentElement.clientWidth / this.container.nativeElement.clientWidth;
+
+    this.pStyle['font-size'] = this.getFontSizeInVw(6);
+    this.footerStyle['font-size'] = this.getFontSizeInVw(2);
   }
 }

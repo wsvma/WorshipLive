@@ -87,7 +87,7 @@ export class ComponentWithDataTable<DataType> {
         if (document.querySelector('data-table') && !this.itemLimitInited) {
             let availableHeight = document.querySelector('data-table').parentElement.clientHeight;
             let rowHeight = document.querySelector('tr').clientHeight;
-            this.itemLimit = Math.floor(availableHeight / rowHeight) - 3;
+            this.itemLimit = Math.floor(availableHeight / rowHeight) - 4;
             this.itemLimitInited = true;
         }
     }

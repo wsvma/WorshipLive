@@ -12,8 +12,8 @@
       <div class="px-2">
         <label>Items</label>
         <ol class="list-group list-group-hover" [sortablejs]="worship.items">
-          <li class="list-group-item py-0" *ngFor="let song of worship.items; let i = index" (click)="onRowSelected(i, song)" [ngClass]="{active:song==selectedItem}">
-            {{ song.title }}
+          <li class="list-group-item py-0" *ngFor="let item of worship.items; let i = index" (click)="onRowSelected(i, item)" [ngClass]="{active:item==selectedItem}">
+            {{ item.title_1 }}
             <button (click)="removeItem(i)">X</button>
           </li>
         </ol>

@@ -121,6 +121,9 @@ export class Song extends SongInDb implements DbObj {
                 }
             }
         }
+        if (this.order.length) {
+            pagesArr = this.order.map(name => pagesMap[name]);
+        }
         return pagesArr;
     }
 

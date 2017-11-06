@@ -6,7 +6,7 @@ html {
     overflow-x: hidden;
 }
 body{
-    height: 99vh;
+    height: 100vh;
 }
 .flex-1 {
     -webkit-box-flex: 1;

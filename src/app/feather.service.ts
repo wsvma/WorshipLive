@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@angular/core';
 import { DbObj, DbObjBase } from '../models/dbobj';
 import { toMyDateFormat } from '../utils/utils';
 import { Observable, Observer } from 'rxjs/Rx';
@@ -6,7 +7,6 @@ import feathers from 'feathers-client';
 
 export abstract class FeatherService<T> {
 
-  private _url = 'http://localhost:3030';
   private feathersApp : any;
 
   constructor() {
@@ -32,26 +32,28 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     private findObservers: Observer<T[]>[] = [];
     private getObservers: { [id:string]: Observer<T>[] } = {};
 
+    public tConstructor: new(tb:TBase, service) => T;
     private service: any;
     private dataStore: {
       objMap : { [id:string] : T },
       objArray: T[];
     }
 
-    constructor(private tConstructor: new(tb:TBase, service) => T, serviceName: string) {
+    constructor() {
 
       super();
-
-      this.service = this.getService(serviceName);
-
-      this.service.on('created', (obj) => this.onCreated(obj));
-      this.service.on('updated', (obj) => this.onUpdated(obj));
-      this.service.on('removed', (obj) => this.onRemoved(obj));
 
       this.dataStore = {
         objMap: {},
         objArray: []
       };
+    }
+
+    set serviceName(name) {
+      this.service = this.getService(name);
+      this.service.on('created', (obj) => this.onCreated(obj));
+      this.service.on('updated', (obj) => this.onUpdated(obj));
+      this.service.on('removed', (obj) => this.onRemoved(obj));
     }
 
     public find() : Observable<T[]> {

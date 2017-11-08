@@ -60,8 +60,10 @@ app.service('api/songs').find()
     .then(songs => {
         const separator = '=region 2=';
         let songsPatched = 0;
+        let songsLoaded = 0;
         let segments = {};
         for (song of songs) {
+            songsLoaded++;
             if (!('order' in song)) {
                 song['order'] = [];
                 for (let s of song['sequence'].split(',')) {
@@ -104,8 +106,8 @@ app.service('api/songs').find()
                 songsPatched++;
             }
         }
-        console.log(segments);
-        console.log(songsPatched, 'songs patched.');
+        console.log(songsPatched.toString() +  ' songs patched.');
+        console.log(songsLoaded.toString() + ' songs loaded.');
     });
 
 const worshipsDb = new nedb({

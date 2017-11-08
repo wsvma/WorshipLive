@@ -13,7 +13,7 @@
         <label>Items</label>
         <ol class="list-group list-group-hover" [sortablejs]="worship.items">
           <li class="list-group-item py-0" *ngFor="let item of worship.items; let i = index" (click)="onRowSelected(i, item)" [ngClass]="{active:item==selectedItem}">
-            {{ item.title_1 }}
+            {{ item.title }}
             <button (click)="removeItem(i)">X</button>
           </li>
         </ol>
@@ -29,7 +29,7 @@
         <div class="flex-1 debug-border"></div>
         <div class="flex-1 debug-border"></div>
       </div>
-      <div class="flex-1 debug-border">
+      <div class="flex-1">
         <app-worship-viewer
           [liveSession]="previewSession"
           [worship]="worship">

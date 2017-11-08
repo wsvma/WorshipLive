@@ -6,11 +6,11 @@ import feathers from 'feathers-client';
 
 export abstract class FeatherService<T> {
 
-  private _url = 'http://192.168.1.20:3030';
+  private _url = 'http://localhost:3030';
   private feathersApp : any;
 
   constructor() {
-    this.feathersApp = feathers().configure(feathers.socketio(io(this._url)));
+    this.feathersApp = feathers().configure(feathers.socketio(io()));
   }
 
   getService(name: string) {

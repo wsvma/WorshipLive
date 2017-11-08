@@ -56,59 +56,6 @@ let m = {
     'b': 'bridge',
     'w': 'bridge 2',
 }
-app.service('api/songs').find()
-    .then(songs => {
-        const separator = '=region 2=';
-        let songsPatched = 0;
-        let songsLoaded = 0;
-        let segments = {};
-        for (song of songs) {
-            songsLoaded++;
-            if (!('order' in song)) {
-                song['order'] = [];
-                for (let s of song['sequence'].split(',')) {
-                    if (s in m)
-                        song['order'].push(m[s]);
-                }
-                delete song['sequence'];
-                app.service('songs').update(song._id, song).then(s => {
-                    console.log('Song patched: ', s.title_1);
-                });
-            }
-            if (!('lyrics_1' in song)) {
-                if (!song['lyrics'].includes('region 2')) {
-                    song['lyrics_1'] = song['lyrics'];
-                    song['lyrics_2'] = ''
-                } else {
-                    let lyrics = song['lyrics'].replace(/\[region 2\]/g, separator);
-                    let re = new RegExp('\\n*\\[.*\\]\\n*', 'g');
-                    let contents = lyrics.split(re).map(c => c.trim());
-                    if (contents[0]) { // no tags
-                        let split = contents[0].split(separator);
-                        song['lyrics_1'] = split[0].trim();
-                        song['lyrics_2'] = (split[1] || '').trim();
-                    } else {
-                        let types = lyrics.match(re).map(t => t.trim());
-                        contents.splice(0, 1);
-                        song['lyrics_1'] = song['lyrics_2'] = '';
-                        for (let i = 0; i < types.length; i++) {
-                            let split = contents[i].split(separator).map(c => c.trim());
-                            split[1] = split[1] || '';
-                            song['lyrics_1'] += types[i] + '\n' + split[0] + '\n';
-                            song['lyrics_2'] += types[i] + '\n' + split[1] + '\n';
-                        }
-                    }
-                }
-                delete song['lyrics'];
-                app.service('songs').update(song._id, song).then(s => {
-                    console.log('Song patched: ', s.title_1);
-                });
-                songsPatched++;
-            }
-        }
-        console.log(songsPatched.toString() +  ' songs patched.');
-        console.log(songsLoaded.toString() + ' songs loaded.');
-    });
 
 const worshipsDb = new nedb({
     filename: 'worships.db',
@@ -123,5 +70,59 @@ app.get('*', function(req, res) {
 });
 // Start the server
 app.listen(process.env.port || 3030);
+
+app.service('api/songs').find()
+.then(songs => {
+    const separator = '=region 2=';
+    let songsPatched = 0;
+    let songsLoaded = 0;
+    let segments = {};
+    for (song of songs) {
+        songsLoaded++;
+        if (!('order' in song)) {
+            song['order'] = [];
+            for (let s of song['sequence'].split(',')) {
+                if (s in m)
+                    song['order'].push(m[s]);
+            }
+            delete song['sequence'];
+            app.service('songs').update(song._id, song).then(s => {
+                console.log('Song patched: ', s.title_1);
+            });
+        }
+        if (!('lyrics_1' in song)) {
+            if (!song['lyrics'].includes('region 2')) {
+                song['lyrics_1'] = song['lyrics'];
+                song['lyrics_2'] = ''
+            } else {
+                let lyrics = song['lyrics'].replace(/\[region 2\]/g, separator);
+                let re = new RegExp('\\n*\\[.*\\]\\n*', 'g');
+                let contents = lyrics.split(re).map(c => c.trim());
+                if (contents[0]) { // no tags
+                    let split = contents[0].split(separator);
+                    song['lyrics_1'] = split[0].trim();
+                    song['lyrics_2'] = (split[1] || '').trim();
+                } else {
+                    let types = lyrics.match(re).map(t => t.trim());
+                    contents.splice(0, 1);
+                    song['lyrics_1'] = song['lyrics_2'] = '';
+                    for (let i = 0; i < types.length; i++) {
+                        let split = contents[i].split(separator).map(c => c.trim());
+                        split[1] = split[1] || '';
+                        song['lyrics_1'] += types[i] + '\n' + split[0] + '\n';
+                        song['lyrics_2'] += types[i] + '\n' + split[1] + '\n';
+                    }
+                }
+            }
+            delete song['lyrics'];
+            app.service('songs').update(song._id, song).then(s => {
+                console.log('Song patched: ', s.title_1);
+            });
+            songsPatched++;
+        }
+    }
+    console.log(songsPatched.toString() +  ' songs patched.');
+    console.log(songsLoaded.toString() + ' songs loaded.');
+});
 
 module.exports = app;

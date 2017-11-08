@@ -99,10 +99,10 @@ export class Song extends SongInDb implements DbObj {
     }
 
     get tags() {
-        return this.getPages().map(p => p.name);
+        return this.getPages(false).map(p => p.name);
     }
 
-    getPages() : Page[] {
+    getPages(expand = true) : Page[] {
         let pagesArr = [];
         let pagesMap = {};
         for (let s of this.getSegments(this.lyrics_1)) {
@@ -121,7 +121,7 @@ export class Song extends SongInDb implements DbObj {
                 }
             }
         }
-        if (this.order.length) {
+        if (expand && this.order.length) {
             pagesArr = this.order.map(name => pagesMap[name]);
         }
         return pagesArr;

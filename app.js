@@ -68,8 +68,6 @@ app.use(feathers.static(serveDir));
 app.get('*', function(req, res) {
     res.sendFile(path.join(serveDir, 'index.html')); // load our public/index.html file
 });
-// Start the server
-app.listen(process.env.port || 3030);
 
 app.service('api/songs').find()
 .then(songs => {
@@ -124,5 +122,8 @@ app.service('api/songs').find()
     console.log(songsPatched.toString() +  ' songs patched.');
     console.log(songsLoaded.toString() + ' songs loaded.');
 });
+
+// Start the server
+app.listen(process.env.PORT || 3030);
 
 module.exports = app;

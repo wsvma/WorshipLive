@@ -5,7 +5,7 @@ import { LiveSession } from './live-session';
 export class LiveController {
 
     protected worship : Worship;
-    protected liveSession : LiveSession;
+    public liveSession : LiveSession;
     protected onPageChange : EventEmitter<any>;
 
     constructor() {}

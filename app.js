@@ -120,6 +120,6 @@ app.get('*', function(req, res) {
     res.sendFile(path.join(serveDir, 'index.html')); // load our public/index.html file
 });
 // Start the server
-app.listen(3030);
+app.listen(process.env.port || 3030);
 
 module.exports = app;

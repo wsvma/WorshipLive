@@ -14,7 +14,16 @@ export class WorshipViewerComponent extends LiveController implements OnInit {
 
   @Input() liveSession : LiveSession;
   @Input() worship : Worship;
+  @Input() controlEnable : boolean = true;
   @Output() onPageChange = new EventEmitter<any>();
+
+  classesR1 = {
+    'justify-content-end' : true
+  };
+
+  classesR2 = {
+    'justify-content-start' : true
+  };
 
   pStyle = {};
   footerStyle = {};

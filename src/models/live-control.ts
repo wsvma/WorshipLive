@@ -4,6 +4,7 @@ import { LiveSession } from './live-session';
 
 export class LiveController {
 
+    public controlEnable : boolean = true;
     protected worship : Worship;
     public liveSession : LiveSession;
     protected onPageChange : EventEmitter<any>;
@@ -76,6 +77,8 @@ export class LiveController {
     }
 
     onKeyUp($event : KeyboardEvent) {
+        if (!this.controlEnable)
+            return;
         switch ($event.code) {
         case "ArrowUp":
             this.moveToPrevParagraph();

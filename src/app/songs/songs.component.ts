@@ -6,7 +6,7 @@ import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { SongsService } from '../songs.service';
 import { Subscription } from 'rxjs/Rx';
-import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ViewContainerRef } from '@angular/core';
 import { Song } from '../../models/song';
 import { DataTableResource, DataTable } from 'angular-4-data-table';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -25,7 +25,7 @@ class Filters {
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.css']
 })
-export class SongsComponent extends ComponentWithDataTable<Song> implements OnInit {
+export class SongsComponent extends ComponentWithDataTable<Song> implements AfterViewInit {
 
   tabSelf: Tab;
   tabEdit: Tab;
@@ -69,7 +69,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements OnIn
     this.tabEdit.update();
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.dataService.find().subscribe((songs: Song[]) => {
       this.data = songs;
       let pMap = this.route.snapshot.queryParamMap;

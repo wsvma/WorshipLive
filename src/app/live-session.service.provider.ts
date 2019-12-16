@@ -1,7 +1,7 @@
 import { LiveSessionService } from './live-session.service';
 import { LiveSession } from '../models/live-session';
 
-export let liveSessionsServiceFactory = () => {
+export function liveSessionsServiceFactory() {
     let service = new LiveSessionService();
     service.serviceName = 'api/live';
     service.tConstructor = LiveSession;

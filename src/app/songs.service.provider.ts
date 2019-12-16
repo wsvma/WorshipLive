@@ -1,7 +1,7 @@
 import { Song } from '../models/song';
 import { SongsService } from './songs.service';
 
-export let songsServiceFactory = () => {
+export function songsServiceFactory() {
     let service = new SongsService();
     service.serviceName = 'api/songs';
     service.tConstructor = Song;

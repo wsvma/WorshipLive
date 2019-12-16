@@ -1,7 +1,7 @@
 import { Worship } from '../models/worship';
 import { WorshipsService } from './worships.service';
 
-export let worshipsServiceFactory = () => {
+export function worshipsServiceFactory() {
     let service = new WorshipsService();
     service.serviceName = 'api/worships';
     service.tConstructor = Worship;

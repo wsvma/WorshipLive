@@ -1,6 +1,6 @@
 const feathers = require('feathers');
 const rest = require('feathers-rest');
-const socketio = require('feathers-socketio');9
+const socketio = require('feathers-socketio');
 const hooks = require('feathers-hooks');
 const bodyParser = require('body-parser');
 const handler = require('feathers-errors/handler');

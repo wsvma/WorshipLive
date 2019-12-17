@@ -5,11 +5,11 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DialogService } from 'ng2-bootstrap-modal/dist';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { SongsService } from '../songs.service';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { AfterViewInit, Component, ViewContainerRef } from '@angular/core';
 import { Song } from '../../models/song';
-import { DataTableResource, DataTable } from 'angular-4-data-table';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { DataTableResource, DataTable } from 'angular5-data-table';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 import FuzzySearch from 'fuzzy-search';
 import * as rangeParser from 'parse-numeric-range';
@@ -35,7 +35,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements Afte
     new DataColumn('writer',        'Writer', false),
     new DataColumn('numwords',      '# Words', true),
     new DataColumn('category',      'Category', false),
-    new DataColumn('key',           'Key', false),
+    new DataColumn('key',           'Key', true),
     new DataColumn('last_modified', 'Last Modified', true),
     new DataColumn('date_created',  'Date Created', false),
   ];
@@ -47,7 +47,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements Afte
     private tabService: TabControlService,
     private state: SharedStateService,
     vcr: ViewContainerRef,
-    toastr: ToastsManager,
+    toastr: ToastrManager,
     dialogService: DialogService) {
 
       super(vcr, toastr, dialogService);

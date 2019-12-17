@@ -5,9 +5,9 @@ import { SharedStateService } from '../shared-state.service';
 import { ComponentWithDataTable } from '../component-with-dtable';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
-import { ToastsManager } from 'ng2-toastr';
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { WorshipsService } from '../worships.service';
-import { Observer, Subscription } from 'rxjs/Rx';
+import { Observer, Subscription } from 'rxjs';
 import { Worship, WorshipInDb } from '../../models/worship';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tab, TabControlService } from '../tab-control.service';
@@ -38,7 +38,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
               private router: Router,
               public  state: SharedStateService,
               vcr: ViewContainerRef,
-              toastr: ToastsManager,
+              toastr: ToastrManager,
               dialogService: DialogService) {
 
     super(vcr, toastr, dialogService);

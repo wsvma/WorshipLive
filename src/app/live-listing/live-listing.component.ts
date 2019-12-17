@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Worship } from '../../models/worship';
 import { WorshipsService } from '../worships.service';
 import { Tab, TabControlService } from '../tab-control.service';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { LiveSession } from '../../models/live-session';
 import { LiveSessionService } from '../live-session.service';
 import { Component, OnInit } from '@angular/core';

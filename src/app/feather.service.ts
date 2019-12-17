@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { DbObj, DbObjBase } from '../models/dbobj';
 import { toMyDateFormat } from '../utils/utils';
-import { Observable, Observer } from 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs';
 import * as io from 'socket.io-client';
 import feathers from 'feathers-client';
 

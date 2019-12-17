@@ -1,10 +1,9 @@
 import { FeatherService } from './feather.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { DialogService } from 'ng2-bootstrap-modal/dist';
-import { ToastsManager } from 'ng2-toastr';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { ViewChild, ViewContainerRef } from '@angular/core';
-import { DataTable } from 'angular-4-data-table/dist/components/table.component';
-import { DataTableResource } from 'angular-4-data-table/dist';
+import { DataTable, DataTableResource } from 'angular5-data-table';
 
 export class DataColumn {
     constructor(
@@ -29,8 +28,7 @@ export class ComponentWithDataTable<DataType> {
 
     @ViewChild(DataTable) dataTable;
 
-    constructor(private vcr: ViewContainerRef, public toastr: ToastsManager, protected dialogService: DialogService) {
-        this.toastr.setRootViewContainerRef(this.vcr);
+    constructor(private vcr: ViewContainerRef, public toastr: ToastrManager, protected dialogService: DialogService) {
     }
 
     numRowsSelected() {
@@ -50,7 +48,7 @@ export class ComponentWithDataTable<DataType> {
     }
 
     showSuccess(message: string) {
-        this.toastr.success(message, 'Success!', {
+        this.toastr.successToastr(message, 'Success!', {
             showCloseButton: true,
         });
     }

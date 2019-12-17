@@ -1,7 +1,7 @@
 import { LiveController } from '../../models/live-control';
 import { Worship } from '../../models/worship';
 import { WorshipsService } from '../worships.service';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { LiveSessionService } from '../live-session.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LiveSession } from '../../models/live-session';

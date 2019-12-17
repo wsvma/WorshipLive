@@ -1,10 +1,9 @@
 import { Router } from '@angular/router';
 import { Tab, TabControlService } from '../tab-control.service';
 import { DialogService } from 'ng2-bootstrap-modal/dist';
-import { ToastsManager } from 'ng2-toastr';
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { ComponentWithDataTable, DataColumn } from '../component-with-dtable';
-import { DataTable } from 'angular-4-data-table/dist/components/table.component';
-import { DataTableResource } from 'angular-4-data-table/dist';
+import { DataTable, DataTableResource } from 'angular5-data-table';
 import { Worship, WorshipInDb } from '../../models/worship';
 import { WorshipsService } from '../worships.service';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
@@ -28,7 +27,7 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
               private tabService: TabControlService,
               private router: Router,
               vcr: ViewContainerRef,
-              toastr: ToastsManager,
+              toastr: ToastrManager,
               dialogService: DialogService) {
 
     super(vcr, toastr, dialogService);

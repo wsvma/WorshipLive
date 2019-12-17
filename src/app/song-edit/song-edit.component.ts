@@ -1,8 +1,8 @@
 import { SharedStateService } from '../shared-state.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { DialogService } from 'ng2-bootstrap-modal/dist';
+import { DialogService } from 'ng2-bootstrap-modal';
 import { Tab, TabControlService } from '../tab-control.service';
-import { Observer, Subscription } from 'rxjs/Rx';
+import { Observer, Subscription } from 'rxjs';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
 import { ActivatedRoute, Router } from '@angular/router';

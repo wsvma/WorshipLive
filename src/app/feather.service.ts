@@ -4,17 +4,11 @@ import { toMyDateFormat } from '../utils/utils';
 import { Observable, Observer } from 'rxjs';
 import * as io from 'socket.io-client';
 import feathers from 'feathers-client';
+import { AngularFirestore, QuerySnapshot, AngularFirestoreCollection } from '@angular/fire/firestore'
 
 export abstract class FeatherService<T> {
 
-  private feathersApp : any;
-
   constructor() {
-    this.feathersApp = feathers().configure(feathers.socketio(io()));
-  }
-
-  getService(name: string) {
-    return this.feathersApp.service(name);
   }
 
   public abstract find() : Observable<T[]>;
@@ -33,13 +27,13 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     private getObservers: { [id:string]: Observer<T>[] } = {};
 
     public tConstructor: new(tb:TBase, service) => T;
-    private service: any;
+    private collectionRef: AngularFirestoreCollection<any>;
     private dataStore: {
       objMap : { [id:string] : T },
       objArray: T[];
     }
 
-    constructor() {
+    constructor(private firestore : AngularFirestore) {
 
       super();
 
@@ -50,71 +44,83 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     }
 
     set serviceName(name) {
-      this.service = this.getService(name);
-      this.service.on('created', (obj) => this.onCreated(obj));
-      this.service.on('updated', (obj) => this.onUpdated(obj));
-      this.service.on('removed', (obj) => this.onRemoved(obj));
+      this.collectionRef = this.firestore.collection(name);
+      this.collectionRef.get().subscribe(this.onSnapshot);
+    }
+
+    private onSnapshot(querySnapshot : QuerySnapshot<TBase>) {
+      if (querySnapshot.empty)
+        return;
+      querySnapshot.docChanges().forEach(change => {
+        let objDb = change.doc.data();
+        let id = change.doc.id;
+        if (change.type === 'added' || change.type === 'modified') {
+          let objBase : TBase;
+          let objT    : T;
+          Object.assign(objBase, objDb);
+          objBase.id = id;
+          objT = new this.tConstructor(objBase, this);
+
+          if (change.type === 'added') {
+            this.dataStore.objArray.push(objT);
+            this.dataStore.objMap[id] = objT;
+          } else {
+            this.dataStore.objArray[this.getIndex(id)] = objT;
+            this.dataStore.objMap[id] = objT;
+            this.updateGetObservers(id);
+          }
+        } else if (change.type === 'removed') {
+          this.dataStore.objMap[id].removed = true;
+          this.updateGetObservers(id);
+        }
+        this.updateFindObservers();
+      })
     }
 
     public find() : Observable<T[]> {
 
       if (!this.find$) {
-        this.find$ = new Observable(observer => {
+        this.find$ = new Observable<T[]>(observer => {
           this.findObservers.push(observer);
-          this.service.find((err, objects: TBase[]) => {
-            if (err) {
-              observer.error(err);
-            }
-            this.dataStore.objArray = [];
-            for (let o of objects) {
-              let newObj: T = new this.tConstructor(o, this);
-              this.dataStore.objArray.push(newObj);
-            }
-            observer.next(this.dataStore.objArray);
-          });
+          observer.next(this.dataStore.objArray);
         });
       }
       return this.find$;
     }
 
-    public get(id: string) {
+    public get(id: string) : Observable<T> {
 
-      let observable = new Observable(observer => {
+      let observable = new Observable<T>(observer => {
+        this.getObservers[id].push(observer);
         if (id in this.dataStore.objMap) {
-          this.getObservers[id].push(observer);
           observer.next(this.dataStore.objMap[id]);
-        } else {
-          this.getObservers[id] = [observer];
-          this.service.get(id, (err, obj: TBase) => {
-            if (err) {
-              observer.error(err);
-              return;
-            }
-            this.dataStore.objMap[id] = new this.tConstructor(obj, this);
-            observer.next(this.dataStore.objMap[id]);
-          });
         }
       });
       return observable;
     }
 
     public async create(obj: T) {
-      delete obj['_id'];
+      delete obj['id'];
       obj['date_created'] = obj['last_modified'] = toMyDateFormat(new Date());
-      return await this.service.create(obj.toBaseFormat);
+      await this.collectionRef.add(obj.toBaseFormat);
+      return obj;
     }
 
     public async update(obj: T) {
       obj['last_modified'] = toMyDateFormat(new Date());
-      return await this.service.update(obj['_id'], obj.toBaseFormat);
+      const objBase = obj.toBaseFormat;
+      await this.collectionRef.doc(objBase.id).set(objBase);
+      return obj;
     }
 
     public async remove(objects: T[]) {
-      return await Promise.all(objects.map(obj => this.service.remove(obj['_id'])));
+      await Promise.all(objects.map(obj => this.collectionRef.doc(obj.toBaseFormat.id).delete()));
+      return;
     }
 
     public async removeWithId(ids: string[]) {
-      return await Promise.all(ids.map(id => this.service.remove(id)));
+      await Promise.all(ids.map(id => this.collectionRef.doc(id).delete()));
+      return;
     }
 
     public lookup(id: string) {
@@ -126,7 +132,7 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
 
     private getIndex(id: string): number {
       for (let i = 0; i < this.dataStore.objArray.length; i++) {
-        if (this.dataStore.objArray[i]['_id'] === id) {
+        if (this.dataStore.objArray[i]['id'] === id) {
           return i;
         }
       }
@@ -150,25 +156,25 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
 
     private onUpdated(obj: TBase) {
 
-      const index = this.getIndex(obj._id);
+      const index = this.getIndex(obj.id);
       this.dataStore.objArray[index] = new this.tConstructor(obj, this);
       this.updateFindObservers();
 
-      if (obj._id in this.dataStore.objMap) {
-        this.dataStore.objMap[obj._id] = new this.tConstructor(obj, this);
-        this.updateGetObservers(obj._id);
+      if (obj.id in this.dataStore.objMap) {
+        this.dataStore.objMap[obj.id] = new this.tConstructor(obj, this);
+        this.updateGetObservers(obj.id);
       }
     }
 
     private onRemoved(obj: TBase) {
 
-      const index = this.getIndex(obj._id);
+      const index = this.getIndex(obj.id);
       this.dataStore.objArray.splice(index, 1);
       this.updateFindObservers();
 
-      if (obj._id in this.dataStore.objMap) {
-        this.dataStore.objMap[obj._id].removed = true;
-        this.updateGetObservers(obj._id);
+      if (obj.id in this.dataStore.objMap) {
+        this.dataStore.objMap[obj.id].removed = true;
+        this.updateGetObservers(obj.id);
       }
     }
   }

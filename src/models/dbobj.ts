@@ -1,6 +1,6 @@
 import { FeatherService } from '../app/feather.service';
 export class DbObjBase {
-    _id: string = '';
+    id: string = '';
     last_modified: string = '';
     date_created: string = '';
     replacer(key, value) {

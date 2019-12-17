@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortablejsModule } from 'angular-sortablejs';
+import { environment } from '../environments/environment';
+import { AngularFireModule } from "@angular/fire";
+import { AngularFirestoreModule, AngularFirestore } from "@angular/fire/firestore";
 
 import { AppComponent } from './app.component';
 import { SongsComponent } from './songs/songs.component';
@@ -86,7 +89,9 @@ const ROUTES = [
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     NgbModule.forRoot(),
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
   ],
   providers: [
     SongsServiceProvider,

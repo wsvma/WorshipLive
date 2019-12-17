@@ -61,7 +61,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
   reloadWorshipFromDb() {
     let observer : Observer<Worship> = {
       next: (worship) => {
-        if (this.worship && this.worship._id != '') {
+        if (this.worship && this.worship.id != '') {
           this.showSuccess('Worship updated.');
         }
         this.original = worship.getClone();
@@ -134,9 +134,9 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     liveSession.worshipName = this.worship.name;
     this.liveSessionService.create(liveSession)
       .then((newLive) => {
-        this.worship.liveId = newLive._id;
+        this.worship.liveId = newLive.id;
         this.worship.update();
-        this.router.navigateByUrl('/live-control/' + newLive._id);
+        this.router.navigateByUrl('/live-control/' + newLive.id);
       });
   }
 

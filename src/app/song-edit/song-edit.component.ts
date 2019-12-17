@@ -150,14 +150,14 @@ export class SongEditComponent implements OnInit, OnDestroy {
   addNewSong() {
     this.songService.create(this.song)
       .then((song)=> {
-        this.router.navigate(['/songs'], { queryParams: { newsong: song._id }});
+        this.router.navigate(['/songs'], { queryParams: { newsong: song.id }});
       });
   }
 
   saveChanges() {
     this.songService.update(this.song)
       .then((song)=> {
-        this.router.navigate(['/songs'], { queryParams: { songupdated: song._id }});
+        this.router.navigate(['/songs'], { queryParams: { songupdated: song.id }});
       })
   }
 }

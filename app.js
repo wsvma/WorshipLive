@@ -7,7 +7,21 @@ const handler = require('feathers-errors/handler');
 const nedb = require('nedb');
 const nedbService = require('feathers-nedb');
 const favicon = require('serve-favicon');
-const path = require('path')
+const path = require('path');
+const firebase = require('firebase')
+require('firebase/firestore');
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAcqrVoHm-SfgickuqCjS_cKCsymKwHY5w",
+    authDomain: "trydb-75773.firebaseapp.com",
+    databaseURL: "https://trydb-75773.firebaseio.com",
+    projectId: "trydb-75773",
+    storageBucket: "trydb-75773.appspot.com",
+    messagingSenderId: "7391445985",
+    appId: "1:7391445985:web:581aa8b9585a62384508a0"
+  };
+
+firebase.initializeApp(firebaseConfig);
 
 // A Feathers app is the same as an Express app
 const app = feathers();
@@ -69,6 +83,8 @@ app.get('*', function(req, res) {
     res.sendFile(path.join(serveDir, 'index.html')); // load our public/index.html file
 });
 
+const db = firebase.firestore();
+
 app.service('api/songs').find()
 .then(songs => {
     const separator = '=region 2=';
@@ -118,6 +134,19 @@ app.service('api/songs').find()
             });
             songsPatched++;
         }
+        /*
+        if (songsLoaded > 1 && songsLoaded <= 10) {
+            delete song['_id'];
+            db.collection('songs').add(song)
+                .then(docRef => {
+                    return docRef.update({'id':docRef.id});
+                })
+                .then(() => {
+                    console.log(`Song added/updated`);
+                })
+                .catch(err => console.error(err));
+        }
+        */
     }
     console.log(songsPatched.toString() +  ' songs patched.');
     console.log(songsLoaded.toString() + ' songs loaded.');

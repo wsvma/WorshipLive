@@ -45,7 +45,7 @@ export class LiveSession extends LiveSessionInDb implements DbObj {
             id: 'live',
             display: 'Live (' + this.worshipName + ')',
             isActive: isActive,
-            link: 'live-control/' + this._id,
+            link: 'live-control/' + this.id,
             fullscreen: false,
         };
     }

@@ -53,11 +53,11 @@ export class LiveListingComponent implements OnInit {
   }
 
   navigateControl(live : LiveSession) {
-    this.router.navigateByUrl('live-control/' + live._id);
+    this.router.navigateByUrl('live-control/' + live.id);
   }
 
   navigateWatch(live) {
-    window.open('live/' + live._id);
+    window.open('live/' + live.id);
   }
 
   unlive(liveSession : LiveSession, index : number) {

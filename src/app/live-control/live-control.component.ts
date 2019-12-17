@@ -59,7 +59,7 @@ export class LiveControlComponent extends LiveController implements OnInit, OnDe
   }
 
   navigateWorship() {
-    this.router.navigateByUrl('worship/' + this.worship._id);
+    this.router.navigateByUrl('worship/' + this.worship.id);
   }
 
   goWatch() {

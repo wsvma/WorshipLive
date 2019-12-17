@@ -89,7 +89,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements Afte
   songDoubleClicked(event) {
     let song = event.row.item;
     this.dataTable.selectedRows = [];
-    this.router.navigateByUrl('/songs/' + song._id);
+    this.router.navigateByUrl('/songs/' + song.id);
   }
 
   get worship() {
@@ -134,7 +134,7 @@ export class SongsComponent extends ComponentWithDataTable<Song> implements Afte
   routeToEdit() {
     let song = this.dataTable.selectedRows[0].item;
     this.dataTable.selectedRows = [];
-    this.router.navigateByUrl('/songs/' + song._id);
+    this.router.navigateByUrl('/songs/' + song.id);
   }
 
   routeToNewSong() {

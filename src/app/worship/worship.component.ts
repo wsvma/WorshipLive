@@ -55,7 +55,7 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
   worshipDoubleClicked(event) {
     let worship = event.row.item;
     this.dataTable.selectedRows = [];
-    this.router.navigateByUrl('/worship/' + worship._id);
+    this.router.navigateByUrl('/worship/' + worship.id);
   }
 
   create() {
@@ -63,13 +63,13 @@ export class WorshipComponent extends ComponentWithDataTable<Worship> implements
     w.name = 'New';
     this.worshipService.create(w)
       .then((newWorship) => {
-        this.router.navigateByUrl('/worship/' + newWorship._id);
+        this.router.navigateByUrl('/worship/' + newWorship.id);
       });
   }
 
   routeToEdit() {
     let worship = this.dataTable.selectedRows[0].item;
     this.dataTable.selectedRows = [];
-    this.router.navigateByUrl('/worship/' + worship._id);
+    this.router.navigateByUrl('/worship/' + worship.id);
   }
 }

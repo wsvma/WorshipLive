@@ -91,7 +91,7 @@ export class ComponentWithDataTable<DataType> {
     }
 
     protected initializeDataTable(data: DataType[]) {
-        this.initializeItemLimit();
+        //this.initializeItemLimit();
         this.dataTableResource = new DataTableResource(data);
         if (this.dataTable) this.dataTable.page = 1;
         this.reload({offset: 0, limit: this.dataTable ? this.dataTable.limit : this.itemLimit});

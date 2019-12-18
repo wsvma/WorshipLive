@@ -12,7 +12,7 @@ import { DataTableModule } from 'angular5-data-table';
 import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SortablejsModule } from 'angular-sortablejs';
+import { SortablejsModule } from 'ngx-sortablejs';
 import { environment } from '../environments/environment';
 import { AngularFireModule } from "@angular/fire";
 import { AngularFirestoreModule, AngularFirestore } from "@angular/fire/firestore";

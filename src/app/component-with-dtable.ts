@@ -1,4 +1,4 @@
-import { FeatherService } from './feather.service';
+import { DbDataService } from './dbdata.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { ToastrManager } from 'ng6-toastr-notifications';
@@ -17,7 +17,7 @@ export class DataColumn {
 
 export class ComponentWithDataTable<DataType> {
 
-    dataService: FeatherService<DataType>;
+    dataService: DbDataService<DataType>;
     data: DataType[] = [];
     items: DataType[] = [];
     itemCount = 0;

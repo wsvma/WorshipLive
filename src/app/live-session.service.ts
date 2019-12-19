@@ -1,5 +1,5 @@
 import { LiveSession, LiveSessionInDb } from '../models/live-session';
-import { GenericService } from './feather.service';
+import { GenericService } from './dbdata.service';
 import { Injectable } from '@angular/core';
 
 @Injectable()

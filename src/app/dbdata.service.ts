@@ -2,12 +2,10 @@ import { Inject, Injectable } from '@angular/core';
 import { DbObj, DbObjBase } from '../models/dbobj';
 import { toMyDateFormat } from '../utils/utils';
 import { Observable, Observer } from 'rxjs';
-import * as io from 'socket.io-client';
-import feathers from 'feathers-client';
 import { AngularFirestore, QuerySnapshot, AngularFirestoreCollection } from '@angular/fire/firestore'
 import { toBase64String } from '@angular/compiler/src/output/source_map';
 
-export abstract class FeatherService<T> {
+export abstract class DbDataService<T> {
 
   constructor() {
   }
@@ -21,7 +19,7 @@ export abstract class FeatherService<T> {
   public abstract lookup(id: string);
 }
 
-export class GenericService<T extends DbObj, TBase extends DbObjBase> extends FeatherService<T> {
+export class GenericService<T extends DbObj, TBase extends DbObjBase> extends DbDataService<T> {
 
     private find$: Observable<T[]>;
     private findObservers: Observer<T[]>[] = [];

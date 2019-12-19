@@ -1,4 +1,4 @@
-import { FeatherService } from '../app/feather.service';
+import { DbDataService } from '../app/dbdata.service';
 import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 
 export class LiveSessionInDb extends DbObjBase {
@@ -15,7 +15,7 @@ export class LiveSessionInDb extends DbObjBase {
 export class LiveSession extends LiveSessionInDb implements DbObj {
 
     removed: boolean;
-    service: FeatherService<LiveSession>;
+    service: DbDataService<LiveSession>;
 
     constructor(objInDb: LiveSessionInDb = new LiveSessionInDb(), service = null) {
         super();

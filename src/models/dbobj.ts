@@ -1,4 +1,4 @@
-import { FeatherService } from '../app/feather.service';
+import { DbDataService } from '../app/dbdata.service';
 
 export const EmptyDbObjBase = {
     id : '',

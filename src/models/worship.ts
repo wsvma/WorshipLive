@@ -1,4 +1,4 @@
-import { FeatherService } from '../app/feather.service';
+import { DbDataService } from '../app/dbdata.service';
 import { Song, SongInDb } from './song';
 import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 
@@ -14,7 +14,7 @@ export class WorshipInDb extends DbObjBase {
 export class Worship extends WorshipInDb implements DbObj {
 
     removed: boolean;
-    service: FeatherService<Worship>;
+    service: DbDataService<Worship>;
 
     items: Song[] = [];
 

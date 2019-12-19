@@ -1,4 +1,4 @@
-import { FeatherService } from '../app/feather.service';
+import { DbDataService } from '../app/dbdata.service';
 import { Page } from './page';
 import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 import * as countWord from 'wordcount';
@@ -36,7 +36,7 @@ class Segment {
 export class Song extends SongInDb implements DbObj {
 
     removed: boolean;
-    service: FeatherService<Song>;
+    service: DbDataService<Song>;
 
     constructor(songInDb: SongInDb = new SongInDb(), service = null) {
         super();

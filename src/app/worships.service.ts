@@ -1,4 +1,4 @@
-import { GenericService } from './feather.service';
+import { GenericService } from './dbdata.service';
 import { Worship, WorshipInDb } from '../models/worship';
 import { Injectable } from '@angular/core';
 

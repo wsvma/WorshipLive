@@ -76,7 +76,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   onKeyUp($event: KeyboardEvent) {
-    if ($event.srcElement.id.includes('title'))
+    if (($event.target as HTMLTextAreaElement).id.includes('title'))
       this.updateTab();
   }
 
@@ -127,7 +127,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   onScroll($event) {
-    let otherId = ($event.target.id == 'lyrics1') ? 'lyrics2' : 'lyrics1';
+    let otherId = (($event.target as HTMLTextAreaElement).id == 'lyrics1') ? 'lyrics2' : 'lyrics1';
     let otherTextArea = document.getElementById(otherId);
     otherTextArea.scrollTop = $event.target.scrollTop;
   }

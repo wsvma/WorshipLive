@@ -88,7 +88,7 @@ const ROUTES = [
     BootstrapModalModule.forRoot({container:document.body}),
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    NgbModule.forRoot(),
+    NgbModule,
     RouterModule.forRoot(ROUTES),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,

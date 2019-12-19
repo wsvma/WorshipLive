@@ -42,33 +42,36 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
         objMap: {},
         objArray: []
       };
+
+
     }
 
     set serviceName(name) {
       this.collectionRef = this.firestore.collection(name);
-      this.collectionRef.get().subscribe((querySnapshot : QuerySnapshot<TBase>) => this.onSnapshot(querySnapshot));
-    }
-
-    private onSnapshot(querySnapshot) {
-      if (querySnapshot.empty)
-        return;
-      querySnapshot.docChanges().forEach(change => {
-        let objDb = change.doc.data();
-        let id = change.doc.id;
-        if (change.type === 'added' || change.type === 'modified') {
-          let objT : T = this.tFactory(this);
-          Object.assign(objT, objDb);
-          if (change.type === 'added') {
-            this.dataStore.objArray.push(objT);
-          } else {
-            this.dataStore.objArray[this.getIndex(id)] = objT;
+      this.collectionRef.stateChanges().forEach(changes => {
+        changes.forEach(change => {
+          console.log(change);
+          let objDb = change.payload.doc.data();
+          let id = change.payload.doc.id;
+          if (change.type === 'added' || change.type === 'modified') {
+            let objT : T = this.tFactory(this);
+            objT['id'] = id;
+            Object.assign(objT, objDb);
+            if (change.type === 'added') {
+              this.dataStore.objArray.push(objT);
+            } else {
+              this.dataStore.objArray[this.getIndex(id)] = objT;
+            }
+            this.dataStore.objMap[id] = objT;
+          } else if (change.type === 'removed') {
+            this.dataStore.objMap[id].removed = true;
+            const index = this.getIndex(id);
+            if (-1 != index) {
+              this.dataStore.objArray.splice(index, 1);
+            }
           }
-          this.dataStore.objMap[id] = objT;
           this.updateGetObservers(id);
-        } else if (change.type === 'removed') {
-          this.dataStore.objMap[id].removed = true;
-          this.updateGetObservers(id);
-        }
+        });
         this.updateFindObservers();
       });
     }
@@ -89,18 +92,24 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
       let observable = new Observable<T>(observer => {
         if (id in this.getObservers) {
           this.getObservers[id].push(observer);
-          observer.next(this.dataStore.objMap[id]);
+          console.log(`in get observer of id ${id}: id exists`);
         } else {
           this.getObservers[id] = [observer];
+          console.log(`in get observer of id ${id}: id does not exist`);
+        }
+        if (id in this.dataStore.objMap) {
+          observer.next(this.dataStore.objMap[id]);
         }
       });
       return observable;
     }
 
     public async create(obj: T) {
-      delete obj['id'];
+      const id = this.firestore.createId();
+      obj['id'] = id;
       obj['date_created'] = obj['last_modified'] = toMyDateFormat(new Date());
-      await this.collectionRef.add(obj.toBaseFormat);
+      const objBase = obj.toBaseFormat;
+      await this.collectionRef.doc(id).set(JSON.parse(JSON.stringify(objBase, objBase.replacer)));
       return obj;
     }
 

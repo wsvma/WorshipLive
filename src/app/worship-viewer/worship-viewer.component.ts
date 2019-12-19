@@ -10,7 +10,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 })
 export class WorshipViewerComponent extends LiveController implements OnInit {
 
-  @ViewChild('container') container: ElementRef;
+  @ViewChild('container', {static: false}) container: ElementRef;
 
   @Input() liveSession : LiveSession;
   @Input() worship : Worship;

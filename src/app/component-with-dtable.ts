@@ -26,7 +26,7 @@ export class ComponentWithDataTable<DataType> {
     dataTableResource : DataTableResource<DataType>;
     dataColumns : DataColumn[];
 
-    @ViewChild(DataTable) dataTable;
+    @ViewChild(DataTable, {static: false}) dataTable;
 
     constructor(private vcr: ViewContainerRef, public toastr: ToastrManager, protected dialogService: DialogService) {
     }

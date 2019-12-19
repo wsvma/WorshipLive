@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore'
 export function liveSessionsServiceFactory(firestore : AngularFirestore) {
     let service = new LiveSessionService(firestore);
     service.serviceName = 'live';
-    service.tFactory = (service) => new LiveSession(new LiveSessionInDb(), service);
+    service.tFactory = (objInDb, service) => new LiveSession(objInDb, service);
     return service;
 }
 

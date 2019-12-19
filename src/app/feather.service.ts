@@ -27,7 +27,7 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
     private findObservers: Observer<T[]>[] = [];
     private getObservers: { [id:string]: Observer<T>[] } = {};
 
-    public tFactory: (service) => T;
+    public tFactory: (objBase, service) => T;
     private collectionRef: AngularFirestoreCollection<any>;
     private dataStore: {
       objMap : { [id:string] : T },
@@ -50,13 +50,11 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
       this.collectionRef = this.firestore.collection(name);
       this.collectionRef.stateChanges().forEach(changes => {
         changes.forEach(change => {
-          console.log(change);
           let objDb = change.payload.doc.data();
           let id = change.payload.doc.id;
           if (change.type === 'added' || change.type === 'modified') {
-            let objT : T = this.tFactory(this);
+            let objT : T = this.tFactory(objDb, this);
             objT['id'] = id;
-            Object.assign(objT, objDb);
             if (change.type === 'added') {
               this.dataStore.objArray.push(objT);
             } else {
@@ -92,10 +90,8 @@ export class GenericService<T extends DbObj, TBase extends DbObjBase> extends Fe
       let observable = new Observable<T>(observer => {
         if (id in this.getObservers) {
           this.getObservers[id].push(observer);
-          console.log(`in get observer of id ${id}: id exists`);
         } else {
           this.getObservers[id] = [observer];
-          console.log(`in get observer of id ${id}: id does not exist`);
         }
         if (id in this.dataStore.objMap) {
           observer.next(this.dataStore.objMap[id]);

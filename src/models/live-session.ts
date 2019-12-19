@@ -1,7 +1,10 @@
 import { FeatherService } from '../app/feather.service';
-import { DbObj, DbObjBase } from './dbobj';
+import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 
 export class LiveSessionInDb extends DbObjBase {
+    constructor(objInDb = EmptyDbObjBase) {
+        super(objInDb);
+    }
     itemIndex : number = 0;
     pageIndex : number = 0;
     paragraphIndex : number = 0;

@@ -1,9 +1,11 @@
 import { FeatherService } from '../app/feather.service';
 import { Song, SongInDb } from './song';
-import { DbObj, DbObjBase } from './dbobj';
+import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 
 export class WorshipInDb extends DbObjBase {
-
+    constructor(objInDb = EmptyDbObjBase) {
+        super(objInDb);
+    }
     name: string = '';
     liveId: string = '';
     itemsInDb: SongInDb[] = [];

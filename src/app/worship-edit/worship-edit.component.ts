@@ -64,6 +64,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
         if (this.worship && this.worship.id != '') {
           this.showSuccess('Worship updated.');
         }
+        console.log(worship)
         this.original = worship.getClone();
         this.state.activeWorship.update(worship.getClone());
       },
@@ -76,6 +77,7 @@ export class WorshipEditComponent extends ComponentWithDataTable<Song> implement
     if (this.subscription)
       this.subscription.unsubscribe();
 
+    console.log('reloadWorshipFromDb');
     this.worshipId = this.route.snapshot.paramMap.get('id');
     this.subscription = this.worshipService.get(this.worshipId).subscribe(observer);
   }

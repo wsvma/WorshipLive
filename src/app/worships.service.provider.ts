@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore'
 export function worshipsServiceFactory(firestore : AngularFirestore) {
     let service = new WorshipsService(firestore);
     service.serviceName = 'worships';
-    service.tFactory = (service) => new Worship(new WorshipInDb(), service);
+    service.tFactory = (objInDb, service) => new Worship(objInDb, service);
     return service;
 }
 

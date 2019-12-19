@@ -1,11 +1,14 @@
 import { FeatherService } from '../app/feather.service';
 import { Page } from './page';
-import { DbObj, DbObjBase } from './dbobj';
+import { DbObj, DbObjBase, EmptyDbObjBase } from './dbobj';
 import * as countWord from 'wordcount';
 import * as hasChinese from 'has-chinese';
 import { toMyDateFormat } from '../utils/utils'
 
 export class SongInDb extends DbObjBase {
+    constructor(objInDb = EmptyDbObjBase) {
+        super(objInDb);
+    }
     title_1: string = '';
     title_2: string = '';
     writer: string = '';

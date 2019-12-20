@@ -26,10 +26,10 @@
     </div>
   </div>
   <div class="songtable h-100" (mousewheel)="onMouseWheel($event)">
-    <button type="button" class="btn btn-primary" (click)="routeToNewSong()">Add New</button>
-    <button type="button" class="btn btn-default" [hidden]="numRowsSelected()==0" (click)="addToWorship()" *ngIf="worship">Add to Worship ( {{ worship.name }} )</button>
-    <button type="button" class="btn btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeData()">Remove</button>
-    <button type="button" class="btn btn-default" [hidden]="numRowsSelected()!=1" (click)="routeToEdit()">View/Modify</button>
+    <button type="button" class="btn mr-2 btn-light" (click)="routeToNewSong()">Add New</button>
+    <button type="button" class="btn mr-2 btn-light" [hidden]="numRowsSelected()==0" (click)="addToWorship()" *ngIf="worship">Add to Worship ( {{ worship.name }} )</button>
+    <button type="button" class="btn mr-2 btn-danger"  [hidden]="numRowsSelected()==0" (click)="removeData()">Remove</button>
+    <button type="button" class="btn mr-2 btn-light" [hidden]="numRowsSelected()!=1" (click)="routeToEdit()">View/Modify</button>
     <data-table
       [items]="items"
       [itemCount]="itemCount"

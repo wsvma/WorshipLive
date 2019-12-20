@@ -10,10 +10,10 @@
       <tr *ngFor="let live of liveSessions; let i = index">
         <td class="d-flex">
           {{ live.worshipName }}
-          <button (click)="navigateWorship(live)" class="btn btn-default ml-auto mr-2">Edit Worship</button>
-          <button (click)="navigateControl(live)" class="btn btn-default mr-2">        Control</button>
-          <button (click)="navigateWatch(live)"   class="btn btn-default mr-2">        Watch</button>
-          <button (click)="unlive(live, i)"       class="btn btn-danger">              Unlive</button>
+          <button (click)="navigateWorship(live)" class="btn mr-2 btn-light ml-auto">Edit Worship</button>
+          <button (click)="navigateControl(live)" class="btn mr-2 btn-light">        Control</button>
+          <button (click)="navigateWatch(live)"   class="btn mr-2 btn-light">        Watch</button>
+          <button (click)="unlive(live, i)"       class="btn mr-2 btn-danger">       Unlive</button>
         </td>
       </tr>
     </tbody>

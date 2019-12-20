@@ -1,9 +1,8 @@
 <div class="w-100 h-100 d-flex flex-column">
   <div>
-    <button class="btn btn-default" (click)="navigateBack()">&larr; Back</button>
-    <button class="btn btn-primary" (click)="goWatch()">Watch (in new window)</button>
-    <button class="btn btn-default" (click)="navigateWorship()">Edit Worship</button>
-    
+    <button class="btn mr-2 btn-light" (click)="navigateBack()">&larr; Back</button>
+    <button class="btn mr-2 btn-primary" (click)="goWatch()">Watch (in new window)</button>
+    <button class="btn mr-2 btn-light" (click)="navigateWorship()">Edit Worship</button>
   </div>
   <div class="d-flex flex-1" tabindex="0" (keyup)="onKeyUp($event)" *ngIf="liveSession && !liveSession.removed else showError">
     <div class="flex-1 d-flex flex-column">

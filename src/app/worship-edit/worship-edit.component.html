@@ -1,9 +1,9 @@
 <div class="d-flex h-100" *ngIf="worship">
   <div class="item-list" style="width:20%">
-    <button type="button" class="btn btn-default" (click)="navigateBack()">&#8249;&#8249; Back</button>
-    <button type="button" class="btn btn-default" (click)="saveChanges()" [disabled]="!isModified()">Save Changes</button>
-    <button type="button" class="btn btn-default" (click)="goLive()" *ngIf="!worship.liveId" [disabled]="worship.items.length==0">Go Live!</button>
-    <button type="button" class="btn btn-default" (click)="goLive()" *ngIf="worship.liveId"  [disabled]="worship.items.length==0" style="color:red">Unlive</button>
+    <button type="button" class="btn btn-light mr-2" (click)="navigateBack()">&#8249;&#8249; Back</button>
+    <button type="button" class="btn btn-light mr-2" (click)="saveChanges()" [disabled]="!isModified()">Save Changes</button>
+    <button type="button" class="btn btn-light mr-2" (click)="goLive()" *ngIf="!worship.liveId" [disabled]="worship.items.length==0">Go Live!</button>
+    <button type="button" class="btn btn-light mr-2" (click)="goLive()" *ngIf="worship.liveId"  [disabled]="worship.items.length==0" style="color:red">Unlive</button>
     <form class="d-flex flex-column">
       <div class="form-group p-2 w-100">
         <label for="name">Name</label>

@@ -2,7 +2,7 @@ import { SharedStateService } from '../shared-state.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { Tab, TabControlService } from '../tab-control.service';
-import { Observer, Subscription } from 'rxjs';
+import { Observer, Subscription, VirtualTimeScheduler } from 'rxjs';
 import { Song, SongInDb } from '../../models/song';
 import { SongsService } from '../songs.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -52,7 +52,8 @@ export class SongEditComponent implements OnInit, OnDestroy {
 
     this.songId = this.route.snapshot.paramMap.get('id');
     this.song = new Song();
-    this.original = Object.assign({}, this.song);
+    this.song.title_1 = 'New';
+    this.original = this.song.getClone();
     this.addNew = (this.songId === 'new');
     this.tabSelf = this.tabService.getTab('song-edit');
     this.tabList = this.tabService.getTab('songs');
@@ -67,6 +68,9 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   updateTab() {
+    this.songId = this.route.snapshot.paramMap.get('id');
+    this.tabSelf.display = this.tabDisplay;
+    this.tabSelf.link = 'songs/' + this.songId;
     this.tabSelf.isActive = true;
     this.tabSelf.isHidden = false;
     this.tabSelf.update();
@@ -76,8 +80,10 @@ export class SongEditComponent implements OnInit, OnDestroy {
   }
 
   onKeyUp($event: KeyboardEvent) {
-    if (($event.target as HTMLTextAreaElement).id.includes('title'))
-      this.updateTab();
+    if (($event.target as HTMLTextAreaElement).id.includes('title')) {
+      this.tabSelf.display = this.tabDisplay;
+      this.tabSelf.update();
+    }
   }
 
   ngOnInit() {
@@ -86,9 +92,7 @@ export class SongEditComponent implements OnInit, OnDestroy {
         next: (song) => {
           this.song = song.getClone();
           this.original = song.getClone();
-          this.tabSelf.display = 'Song (' + this.song.title + ')';
-          this.tabSelf.link = 'songs/' + this.songId;
-          this.tabSelf.update();
+          this.updateTab()
         },
         error: (err) => {
           this.song = null;
